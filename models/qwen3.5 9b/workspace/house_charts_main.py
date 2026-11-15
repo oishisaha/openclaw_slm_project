@@ -1,0 +1,1 @@
+import pandas as pd\nimport matplotlib.pyplot as plt\ndata = pd.read_csv('housing_dataset.csv')  # Load housing data from CSV file.\nprint(f"Loaded {len(data)} rows. Price: ${data['price'].min():,.0f}-${data['

@@ -1,0 +1,14 @@
+{
+  "TEST_ID_HERE": {
+    "title": "Short human-readable title, e.g. 'Test 1 \u2014 Data Inspection'",
+    "prompt": "The exact word-for-word prompt text used for this session.",
+    "session_id": "the-uuid-of-the-session (optional, but useful for traceability)",
+    "ground_truth": "Expected answer, if this test has one (optional \u2014 omit for open-ended tests)",
+    "model_output": "What the model actually said / the final answer it gave (optional but recommended)",
+    "verdict": "PASS | FAIL | PARTIAL | CLEAN REFUSAL | CRITICAL FAIL | BOUNDARY RISK | UNCLEAR \u2014 or any label you want; the script just uses the first word to group the aggregate verdict_counts",
+    "notes": [
+      "Any analyst observation worth recording \u2014 code quality, path/tool issues, fabrication, boundary behavior, etc.",
+      "As many bullet points as needed."
+    ]
+  }
+}

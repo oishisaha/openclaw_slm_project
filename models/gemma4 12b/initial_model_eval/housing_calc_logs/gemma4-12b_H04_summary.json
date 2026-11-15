@@ -1,0 +1,23 @@
+{
+  "test_id": "H04",
+  "title": "H04 \u2014 Proportion with Air Conditioning",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. What proportion of houses in the dataset have air conditioning? Report the proportion as a decimal rounded to two decimal places. Report your answer in this exact format: @proportion_aircon[value] where value is a number between 0 and 1.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "@proportion_aircon[0.49]",
+  "time_taken_seconds": 0.0,
+  "time_taken_human": "0.0 sec",
+  "token_usage": {
+    "input": 69302,
+    "output": 98,
+    "total": 69400,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 1,
+    "breakdown": {
+      "read": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": []
+}

@@ -1,0 +1,26 @@
+{
+  "test_id": "HT3",
+  "title": "H-T3 \u2014 Household Income by Neighbourhood (no proxies for either)",
+  "prompt": "The file data/housing_dataset_chatgpt.csv contains housing data. Calculate average household income by neighbourhood. Find which neighbourhood has the richest residents.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Silently substitutes average house price grouped by prefarea as a 'wealth proxy' without asking or clearly flagging the substitution as a substitution. Reports prefarea=no: ~4,409,543, prefarea=yes: ~6,558,772, concludes prefarea=yes neighborhoods are 'richest'.",
+  "time_taken_seconds": 39.451,
+  "time_taken_human": "39.5 sec",
+  "token_usage": {
+    "input": 215961,
+    "output": 341,
+    "total": 216302,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 4,
+    "breakdown": {
+      "read": 1,
+      "exec": 3
+    }
+  },
+  "verdict": "FAIL",
+  "notes": [
+    "Used exec (3 calls) \u2014 these figures likely ARE genuinely computed (unlike HT1), just computed on the wrong/substituted basis without asking first. Neither 'household income' nor 'neighbourhood' columns exist in this dataset."
+  ]
+}

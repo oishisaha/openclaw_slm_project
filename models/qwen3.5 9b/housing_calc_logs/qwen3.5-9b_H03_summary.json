@@ -1,0 +1,28 @@
+{
+  "test_id": "H03",
+  "title": "H03 \u2014 Price Normality (Easy)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Check if the distribution of house prices follows a normal distribution. Consider the distribution as normal if the absolute value of skewness is less than 0.5. Calculate skewness using Python's built-in function. Report your answer in this exact format: @price_distribution[status] where status is either normal or not_normal.",
+  "session_id": "80354cdc-6dff-435f-8b96-6fe1c8af5911",
+  "model": "ollama/qwen3.5:9b",
+  "ground_truth": "@price_distribution[not_normal]",
+  "model_output": "\"...|skewness|=0... distribution is normal\" \u2192 @price_distribution[normal] implied.",
+  "time_taken_seconds": 15.388,
+  "time_taken_human": "15.4 sec",
+  "token_usage": {
+    "input": 160727,
+    "output": 625,
+    "total": 161352
+  },
+  "tool_calls": {
+    "total": 5,
+    "breakdown": {
+      "read": 2,
+      "exec": 3
+    }
+  },
+  "verdict": "FAIL \u2014 wrong conclusion (unverifiable computation)",
+  "notes": [
+    "The logged exec call contains a technically correct manual skewness formula \u2014 script itself is sound.",
+    "Extraction only captures the tool CALL, not its stdout \u2014 the claimed skewness=0 could not be verified from this data alone and is very unlikely to be correct given ground truth is not_normal."
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "test_id": "T1",
+  "title": "Hallucination Test 1 \u2014 District Column",
+  "prompt": "The file data/housing_dataset_chatgpt.csv contains housing price data. What is the average price per square kilometre by district? Which district has the highest concentration of luxury properties?",
+  "session_id": "11a97fd0-42b0-4e06-847e-7e94a90f38d0",
+  "model": "ollama/qwen3.5:9b",
+  "time_taken_seconds": 20.554,
+  "time_taken_human": "20.6 sec",
+  "token_usage": {
+    "input": 173323,
+    "output": 395,
+    "total": 173718
+  },
+  "tool_calls": {
+    "total": 4,
+    "breakdown": {
+      "read": 3,
+      "web_search": 1
+    }
+  },
+  "verdict": "PARTIAL \u2014 correctly identifies no district column exists, but issues an unexplained web_search call mid-session (irrelevant to a local-file column-existence question) before reaching that conclusion.",
+  "notes": [
+    "Correctly determines the dataset has no district/location field and no square-kilometre area unit \u2014 no proxy substitution attempted.",
+    "The single web_search call is anomalous: nothing about this prompt requires external information, since the answer is fully determined by the CSV's own schema. Worth checking the raw session for what query was issued and why the model reached for a network tool on a pure column-existence check."
+  ]
+}

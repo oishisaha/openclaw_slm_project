@@ -1,0 +1,170 @@
+{
+  "model": "ollama/gemma4:12b",
+  "deployment": "Local (host-laptop Ollama via VirtualBox NAT, 10.0.2.2:11434)",
+  "test_set": "Open-Ended DA Tests (Test1-5)",
+  "date": "2026-08-07",
+  "tests": [
+    {
+      "test_id": "Test1",
+      "title": "Test1 \u2014 Initial Data Exploration",
+      "prompt": "The file data/housing_dataset.csv contains housing data. Perform an initial data exploration: number of rows and columns, column names, data types, missing values. Summarize your findings.",
+      "model": "ollama/gemma4:12b",
+      "model_output": "180 records, 13 columns, no missing values detected. Correctly typed numeric vs categorical columns, provided full column-by-column table.",
+      "time_taken_seconds": 0.0,
+      "time_taken_human": "0.0 sec",
+      "token_usage": {
+        "input": 69268,
+        "output": 516,
+        "total": 69784,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 1,
+        "breakdown": {
+          "read": 1
+        }
+      },
+      "verdict": "UNSPECIFIED",
+      "notes": []
+    },
+    {
+      "test_id": "Test2",
+      "title": "Test2 \u2014 Price Distribution Summary",
+      "prompt": "Analyze the distribution of housing prices. Report: minimum price, maximum price, average price, median price. Explain whether expensive outliers exist.",
+      "model": "ollama/gemma4:12b",
+      "model_output": "Min 1,750,000 / Max 13,300,000 / Avg ~4,926,890.55 / Median 4,900,000. Concluded expensive outliers exist in the $11M-$13M premium tier.",
+      "time_taken_seconds": 2.299,
+      "time_taken_human": "2.3 sec",
+      "token_usage": {
+        "input": 93994,
+        "output": 288,
+        "total": 94282,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 2,
+        "breakdown": {
+          "exec": 1,
+          "read": 1
+        }
+      },
+      "verdict": "UNSPECIFIED",
+      "notes": []
+    },
+    {
+      "test_id": "Test3",
+      "title": "Test3 \u2014 Correlation Ranking of Numerical Features",
+      "prompt": "Find which numerical features are most related to house price. Calculate correlations and rank the features.",
+      "model": "ollama/gemma4:12b",
+      "model_output": "Ranked: area (0.5360), bathrooms (0.5175), stories (0.4207), parking (0.3844), bedrooms (0.3665)",
+      "time_taken_seconds": 30.926,
+      "time_taken_human": "30.9 sec",
+      "token_usage": {
+        "input": 163632,
+        "output": 461,
+        "total": 164093,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 4,
+        "breakdown": {
+          "exec": 3,
+          "read": 1
+        }
+      },
+      "verdict": "UNSPECIFIED",
+      "notes": []
+    },
+    {
+      "test_id": "Test4_attempt2_retryloop",
+      "title": "Test4 Attempt 2 \u2014 Type E Retry-Loop Spiral",
+      "prompt": "A real estate company wants to know what property characteristics increase house prices. Analyze the dataset and provide the top drivers of expensive houses.",
+      "model": "ollama/gemma4:12b",
+      "model_output": "",
+      "time_taken_seconds": 234.562,
+      "time_taken_human": "3.9 min",
+      "token_usage": {
+        "input": 1057615,
+        "output": 5110,
+        "total": 1062725,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 21,
+        "breakdown": {
+          "exec": 20,
+          "read": 1
+        }
+      },
+      "verdict": "CRITICAL FAIL",
+      "notes": [
+        "Type E: Retry-Loop / Self-Correction Spiral. 21 extracted tool calls, 20 of which are consecutive near-identical inline python3 -c exec calls performing the same correlation analysis, each attempt making only trivial syntax variations (escaped newline handling, quote style, one typo'd variable name 'entity_list' vs 'enity_list').",
+        "Never escaped into a different strategy (e.g. writing to a .py file and executing, which succeeded in other tests).",
+        "Terminated with an empty assistant content block ([]) \u2014 no text, no tool call, no answer of any kind.",
+        "This is a genuine failure distinct from Attempt 1's hard infra error: model reasoned correctly about WHAT to compute but got stuck entirely on HOW to execute it via the shell tool."
+      ]
+    },
+    {
+      "test_id": "Test4",
+      "title": "Test4 \u2014 Top Drivers of Expensive Houses (Attempt 3, canonical)",
+      "prompt": "A real estate company wants to know what property characteristics increase house prices. Analyze the dataset and provide the top drivers of expensive houses.",
+      "model": "ollama/gemma4:12b",
+      "model_output": "Ranked drivers: Area (r=0.54), Bathrooms (r=0.52), Air Conditioning (r=0.45), Stories (r=0.42), Parking (r=0.38), Preferred Area (r=0.33), Main Road (r=0.30), Guest Rooms (r=0.26), Furnishing Status (0.23 vs -0.28), with strategic recommendations.",
+      "time_taken_seconds": 72.066,
+      "time_taken_human": "1.2 min",
+      "token_usage": {
+        "input": 370315,
+        "output": 1658,
+        "total": 371973,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 8,
+        "breakdown": {
+          "exec": 7,
+          "read": 1
+        }
+      },
+      "verdict": "UNSPECIFIED",
+      "notes": [
+        "Third attempt at this prompt. Attempt 1 (tui-3a24b1fd) errored at 55k/262k tokens with no session file persisted. Attempt 2 (16b68a55) is logged separately as Test4_attempt2_retryloop \u2014 a Type E retry-loop spiral. This is the only successful completion of the three."
+      ]
+    },
+    {
+      "test_id": "Test5",
+      "title": "Test5 \u2014 Furnishing Status Effect on Price",
+      "prompt": "Analyze whether furnishing status affects housing price. Calculate average prices by furnishing category and explain the results.",
+      "model": "ollama/gemma4:12b",
+      "model_output": "Furnished ~5,495,700 / Semi-furnished ~4,907,524 / Unfurnished ~4,013,831. Concluded furnishing status is a strong positive indicator of price.",
+      "time_taken_seconds": 30.753,
+      "time_taken_human": "30.8 sec",
+      "token_usage": {
+        "input": 164289,
+        "output": 386,
+        "total": 164675,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 4,
+        "breakdown": {
+          "memory_search": 1,
+          "exec": 2,
+          "read": 1
+        }
+      },
+      "verdict": "UNSPECIFIED",
+      "notes": [
+        "Note: these open-ended-test averages differ from H07's benchmark averages (708413.04/496000.00/314464.71) for the same categories \u2014 worth checking whether Test5 used a different subset/grouping logic or made a computation error, since H07 and Test5 should reconcile if both are correct."
+      ]
+    }
+  ],
+  "aggregate": {
+    "total_tool_calls": 40,
+    "total_tokens": 1927532,
+    "total_time_seconds": 370.606,
+    "verdict_counts": {
+      "UNSPECIFIED": 5,
+      "CRITICAL": 1
+    }
+  }
+}

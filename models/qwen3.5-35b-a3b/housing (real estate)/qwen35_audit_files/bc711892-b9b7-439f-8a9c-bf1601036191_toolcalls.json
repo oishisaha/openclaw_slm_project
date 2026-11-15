@@ -1,0 +1,10 @@
+[
+  {
+    "timestamp": "2026-07-22T03:20:31.393Z",
+    "tool": "write",
+    "arguments": {
+      "path": "/home/oishi/.openclaw/workspace/memory/2026-07-22.md",
+      "content": "# Memory Log - July 22, 2026\n\n## Context from Session\n**Time:** 11:20 GMT+8\n\n## Key Facts Remembered\n\n### Housing Dataset Currency Context\n- **Important:** All monetary values in both `housing_dataset` and `housing_dataset_chatgpt` are in **USD ($)**.\n- This applies to all price-related columns including:\n  - House prices\n  - Sale prices\n  - Any other monetary figures\n\n### Session Details\n- User: Mosh\n- Context: Evaluating OpenClaw running on open-source models as replacement for human data analyst\n- Model in use: ollama/qwen3.5:4b\n- Current model: openrouter/qwen3.5-35b-a3b\n\n## Action Items\n- Remember this currency context when analyzing housing data\n- Always specify values are in USD ($) when reporting on housing_dataset\n"
+    }
+  }
+]

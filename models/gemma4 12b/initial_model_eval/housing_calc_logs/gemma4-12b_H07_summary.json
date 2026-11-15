@@ -1,0 +1,23 @@
+{
+  "test_id": "H07",
+  "title": "H07 \u2014 Mean Price by Furnishing Status",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Calculate the mean price for each furnishing status category (furnished, semi-furnished, unfurnished). Report each mean rounded to two decimal places. Report your answer in this exact format: @mean_price_furnished[value] @mean_price_semi[value] @mean_price_unfurnished[value]",
+  "model": "ollama/gemma4:12b",
+  "model_output": "@mean_price_furnished[708413.04] @mean_price_semi[496000.00] @mean_price_unfurnished[314464.71]",
+  "time_taken_seconds": 0.0,
+  "time_taken_human": "0.0 sec",
+  "token_usage": {
+    "input": 69350,
+    "output": 217,
+    "total": 69567,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 1,
+    "breakdown": {
+      "read": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": []
+}

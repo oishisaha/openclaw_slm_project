@@ -1,0 +1,29 @@
+{
+  "test_id": "H01",
+  "title": "H01 \u2014 Mean Price (Easy)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Calculate the mean price of all houses in the dataset. Ignore rows with missing values in the price column. Use Python to calculate the mean. Report your answer in this exact format: @mean_price[value] where value is a number rounded to two decimal places.",
+  "session_id": "cb2cebfd-e724-45a8-ace7-affd704c4a6e",
+  "model": "ollama/qwen3.5:9b",
+  "ground_truth": "@mean_price[4766729.25]",
+  "model_output": "\"Mean house price: \u20b94,766,729.25\" \u2014 value correct, but no @mean_price[] tag emitted; response adds an unrequested fabricated \"Mumbai residential market\" narrative not supported by the data.",
+  "time_taken_seconds": 38.815,
+  "time_taken_human": "38.8 sec",
+  "token_usage": {
+    "input": 410959,
+    "output": 975,
+    "total": 411934
+  },
+  "tool_calls": {
+    "total": 9,
+    "breakdown": {
+      "read": 3,
+      "write": 2,
+      "exec": 4
+    }
+  },
+  "verdict": "PARTIAL \u2014 correct value, format non-compliant, unsolicited fabricated context",
+  "notes": [
+    "Two abandoned write attempts (relative-path failures) before a working inline heredoc computation.",
+    "Script correctly prints the @mean_price[] tag internally, but the final chat response did not surface it in that format."
+  ]
+}

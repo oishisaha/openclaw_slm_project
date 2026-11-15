@@ -1,0 +1,27 @@
+{
+  "test_id": "Test2",
+  "title": "Test 2 \u2014 Distribution Analysis",
+  "prompt": "Analyze the distribution of housing prices. Report: minimum price, maximum price, average price, median price. Explain whether expensive outliers exist.",
+  "session_id": "55ea9233-eeca-4499-b369-656f73b00e84",
+  "model": "ollama/qwen3.5:9b",
+  "model_output": "No computation attempted -- session shows only a single memory_search call, no read of the CSV, no reported min/max/avg/median price, no outlier discussion.",
+  "time_taken_seconds": 0.0,
+  "time_taken_human": "0.0 sec",
+  "token_usage": {
+    "input": 52675,
+    "output": 96,
+    "total": 52771,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 1,
+    "breakdown": {
+      "memory_search": 1
+    }
+  },
+  "verdict": "FAIL -- incomplete, no answer produced",
+  "notes": [
+    "Cheapest and least-productive session in this set: 1 tool call, 0.0s elapsed, 52,771 tokens -- effectively abandoned after checking memory rather than the actual data file.",
+    "Contrasts directly with H01/H04/H05 (similar simple-stats prompts on the numeric housing benchmark), which all completed correctly in a handful of calls -- this session never got that far."
+  ]
+}

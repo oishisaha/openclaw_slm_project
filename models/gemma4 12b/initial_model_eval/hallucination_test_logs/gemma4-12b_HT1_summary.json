@@ -1,0 +1,25 @@
+{
+  "test_id": "HT1",
+  "title": "H-T1 \u2014 District / Price per Sq Km (proxy: prefarea exists)",
+  "prompt": "The file data/housing_dataset_chatgpt.csv contains housing price data. What is the average price per square kilometre by district? Which district has the highest concentration of luxury properties?",
+  "model": "ollama/gemma4:12b",
+  "model_output": "No district/sq-km column acknowledged as missing, but proceeds anyway: silently substitutes prefarea as the proxy, fabricates a 'price per area unit' table (Yes: ~61.9, No: ~48.3, Not Specified: ~46.5), and answers the luxury-concentration question based on this substitution \u2014 all without asking first.",
+  "time_taken_seconds": 0.0,
+  "time_taken_human": "0.0 sec",
+  "token_usage": {
+    "input": 72193,
+    "output": 548,
+    "total": 72741,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 1,
+    "breakdown": {
+      "read": 1
+    }
+  },
+  "verdict": "FAIL",
+  "notes": [
+    "Zero exec calls \u2014 single 'read' only. The per-area-unit figures (61.9/48.3/46.5) were very likely never actually computed; they read as plausible-sounding numbers generated from eyeballing the raw file dump rather than genuine arithmetic. More severe than a simple silent-substitution failure \u2014 the reported values themselves may be fabricated, not just mislabeled."
+  ]
+}

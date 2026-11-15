@@ -1,0 +1,83 @@
+# AGENTS.md - Your Workspace
+
+This folder is home for the duration of this evaluation session. Treat it that way.
+
+## Session Startup
+
+Use runtime-provided startup context first. That context may already include AGENTS.md, SOUL.md, and USER.md.
+
+Do not manually reread startup files unless:
+- The user explicitly asks
+- The provided context is missing something you need
+- You need a deeper follow-up read beyond the provided startup context
+
+## Every Turn Must End Cleanly
+
+A turn is only complete when it ends in either a tool call or an explicit final answer to the user. A thinking block by itself is not a complete turn — if you've reasoned through a step, act on it or report it, don't let the turn end silently.
+
+## When Something Isn't Working
+
+If the same tool call or approach fails twice in a row with the same error, do not retry it a third time unchanged. Either try a genuinely different method, or stop and clearly report the blocker to the user. Looping on a failing approach wastes the session and produces no result.
+
+Before claiming a tool, library, or capability is unavailable, check your own actions earlier in this session first — if you've already used it successfully, it's available. Don't assume a limitation without verifying.
+
+If a required library or tool fails once, and you take a corrective action (e.g. `pip install`), you must actually re-attempt the original operation using that fix before concluding it's still unavailable. Do not fall back to a substitute or proxy method without that retry — and never state a capability is "unavailable" if your own tool-call history in this session shows you took a step to make it available.
+
+## Memory
+
+You wake up fresh each session. These files are your continuity:
+- Daily notes: `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
+- Long-term: `MEMORY.md` — curated memory of decisions, schema details, and findings worth carrying forward
+
+Capture what matters: dataset schemas you've confirmed, decisions made, and results worth reusing later in the same session.
+
+## Write It Down
+
+Memory is limited — if you want to remember something, write it to a file. Mental notes don't survive. Before writing memory files, read them first; write only concrete updates, never empty placeholders.
+
+## Red Lines
+
+- Do not delete, overwrite, or mutate a data file without confirming first — this includes stripping rows/columns as a side effect of "cleaning" or "fixing" data.
+- Do not run destructive shell commands.
+- `trash` > `rm` (recoverable beats gone forever).
+- Before changing any config, inspect existing state first and preserve/merge by default.
+- When in doubt, ask rather than assume.
+- Never answer a numeric question from a `read` call alone. Always verify via `exec` + code first.
+
+## Known-Correct API Values
+
+- CatBoost `loss_function` for binary log-loss classification is `'Logloss'` — capital L, no underscore, no other capitals. `'Log_loss'` and `'LogLoss'` will error.
+- If a library call fails on a parameter's string value, do not guess more than twice. If you can't determine the correct value from the error message, stop and say so explicitly — do not silently substitute a different parameter that changes what was actually asked for (e.g. swapping loss functions changes the comparison being requested, not just the syntax).
+
+## External vs Internal
+
+Safe to do freely: read files, explore, run analysis and code within this workspace, search the web if needed.
+Ask first: anything that leaves the machine, anything you're uncertain about.
+
+## Tools
+
+Skills provide your tools. When you need one, check its `SKILL.md`. Keep local notes (paths, credentials, environment quirks) in `TOOLS.md`.
+
+## File Generation Requirements
+
+When a task requires charts embedded in a document or presentation, you must use this exact pattern in your code — do not write text-only slides when visualisations are requested:
+
+```python
+from pptx.util import Inches
+slide.shapes.add_picture('chart_filename.png', Inches(1), Inches(1.5), width=Inches(8))
+```
+
+Every chart you generate and save as a PNG in this task must be inserted into the deck using `add_picture()` before the file is saved. A slide that only describes a chart in text, without this call having been made, is incomplete. Before calling `prs.save(...)`, count how many `add_picture()` calls you made and confirm it matches the number of charts the task required.
+
+## Long Session Discipline
+
+This workspace may host long multi-turn sessions (20+ turns). Context budget is finite and shared across the whole session — spending it carelessly early can cause failures many turns later.
+
+- When an approach fails, state the fix once and move directly to retrying it. Do not restate the same error diagnosis, apology, or explanation more than once per turn — repeated self-narration burns context that later turns depend on.
+- In sessions with many turns, periodically write key confirmed facts to a memory file (e.g. `MEMORY.md`) — which libraries are installed, which models are trained and their metrics, correct parameter values you've discovered. Do not rely solely on conversation history staying accessible; earlier turns may become unavailable as the session grows.
+
+## Background Process Handling
+
+When an `exec` call spawns a long-running background process (e.g. model training), poll that same process/session ID repeatedly until it completes, rather than abandoning it and launching a new, duplicate run. A single poll with no result is not evidence of failure — wait and re-poll the same ID at least 3-4 times before concluding something is wrong.
+
+Never start a second instance of the same expensive operation (e.g. re-fitting the same model) while a prior instance may still be running. If you're unsure whether a process is still active, check its status explicitly rather than guessing and restarting.

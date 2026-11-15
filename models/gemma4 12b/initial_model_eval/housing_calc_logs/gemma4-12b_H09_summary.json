@@ -1,0 +1,26 @@
+{
+  "test_id": "H09",
+  "title": "H09 \u2014 Preprocessing / Min-Max Normalization",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Perform data preprocessing: encode the furnishingstatus column as numeric (furnished=2, semi-furnished=1, unfurnished=0), encode all yes/no columns as binary (yes=1, no=0), and normalise the price and area columns using min-max scaling. Report the mean of the normalised price column and the mean of the normalised area column after preprocessing. Report your answer in this exact format: @mean_norm_price[value] @mean_norm_area[value] where both values are rounded to four decimal places.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "@mean_norm_price0.2612 @mean_norm_area0.2406",
+  "time_taken_seconds": 33.438,
+  "time_taken_human": "33.4 sec",
+  "token_usage": {
+    "input": 114666,
+    "output": 363,
+    "total": 115029,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 2,
+    "breakdown": {
+      "read": 1,
+      "exec": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": [
+    "Output-format non-compliance: missing brackets around both values"
+  ]
+}

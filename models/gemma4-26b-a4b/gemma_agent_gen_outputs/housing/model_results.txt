@@ -1,0 +1,18 @@
+--- Housing Price Prediction Model Results ---
+RMSE: 1400565.97
+R² Score: 0.6119
+
+--- Feature Rankings ---
+area: 0.4684
+bathrooms: 0.1515
+airconditioning_yes: 0.0627
+parking: 0.0575
+stories: 0.0571
+bedrooms: 0.0484
+furnishingstatus_unfurnished: 0.0350
+basement_yes: 0.0308
+prefarea_yes: 0.0307
+hotwaterheating_yes: 0.0172
+guestroom_yes: 0.0167
+furnishingstatus_semi-furnished: 0.0137
+mainroad_yes: 0.0102

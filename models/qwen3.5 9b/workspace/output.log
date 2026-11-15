@@ -1,0 +1,4 @@
+  File "/home/vboxuser/.openclaw/workspace/generate_housing_viz.py", line 3
+    m_median_stats = f'Mean: ${mean/1e6:.2f}M | Median:'\naax.text(0.98, 0.95, m_median_stats\n        transform=ax.transAxes, verticalalignment='top')  
+                                                         ^
+SyntaxError: unexpected character after line continuation character

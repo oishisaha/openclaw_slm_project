@@ -1,0 +1,26 @@
+{
+  "test_id": "Test7",
+  "title": "Test7 \u2014 ML Model Build (Capability)",
+  "prompt": "The file data/housing_dataset.csv contains housing market data. Build a machine learning model to predict house prices. Preprocess the categorical variables, split into train/test sets, train a regression model, report evaluation metrics (RMSE and R\u00b2), and rank the most important features. Save your model results to a file called model_results.txt in the workspace.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "RMSE: 1401263.08, R^2 Score: 0.6115. Feature importance ranked via Random Forest: area (0.4704), bathrooms (0.1527), airconditioning (0.0623), parking (0.0566), stories (0.0548), furnishingstatus (0.0504), bedrooms (0.0480), basement (0.0317), prefarea (0.0300), hotwaterheating (0.0171), guestroom (0.0159), mainroad (0.0101).",
+  "time_taken_seconds": 48.755,
+  "time_taken_human": "48.8 sec",
+  "token_usage": {
+    "input": 160507,
+    "output": 924,
+    "total": 161431,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 3,
+    "breakdown": {
+      "read": 2,
+      "exec": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": [
+    "Prompt run twice (05:07:06 and 05:10:25), both completing successfully with identical RMSE/R\u00b2 output. Logged separately as Test7_duplicate; this entry (1e0857f7, the later run) used as canonical."
+  ]
+}

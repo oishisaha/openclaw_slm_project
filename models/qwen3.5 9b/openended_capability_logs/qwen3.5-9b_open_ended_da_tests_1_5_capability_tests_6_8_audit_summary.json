@@ -1,0 +1,260 @@
+{
+  "model": "ollama/qwen3.5:9b",
+  "deployment": "Local (host-laptop Ollama via VirtualBox NAT, 10.0.2.2:11434)",
+  "test_set": "Open-Ended DA Tests (1-5) + Capability Tests (6-8)",
+  "date": "2026-08-06",
+  "tests": [
+    {
+      "test_id": "Test1",
+      "title": "Test 1 \u2014 Data Inspection",
+      "prompt": "The file data/housing_dataset.csv contains housing data. Perform an initial data exploration: number of rows and columns, column names, data types, missing values. Summarize your findings.",
+      "session_id": "bba4a36b-716e-4263-b99f-ccbdb32418bb",
+      "model": "ollama/qwen3.5:9b",
+      "model_output": "Correct row/column counts (545 x 13), correct dtypes, correctly reports zero missing values. Also mislabels the 'prefarea' column as \"str (prefecture/region)\" -- the dataset's naming pattern (mainroad, guestroom, basement, hotwaterheating, airconditioning) strongly indicates prefarea is a binary yes/no 'preferred area' flag, not a geographic region.",
+      "time_taken_seconds": 372.767,
+      "time_taken_human": "6.2 min",
+      "token_usage": {
+        "input": 3096028,
+        "output": 11293,
+        "total": 3107321,
+        "turns_logged": 2
+      },
+      "tool_calls": {
+        "total": 83,
+        "breakdown": {
+          "read": 17,
+          "exec": 41,
+          "write": 25
+        }
+      },
+      "verdict": "PARTIAL -- correct core stats, but a fabricated/incorrect column interpretation, reached only after an extreme retry storm",
+      "notes": [
+        "83 tool calls (41 exec, 25 write, 17 read) and ~6.2 minutes elapsed before landing on a working script -- extreme trial-and-error even though the eventual output was reasonable.",
+        "prefarea mislabeled as 'prefecture/region' -- a fabricated interpretation of a real column, inconsistent with the dataset's own binary-flag naming convention used for every other yes/no column.",
+        "Two separate model.completed usage entries logged (484,669 then 2,622,652 tokens) for what was presented as a single-prompt turn -- likely an internal continuation after hitting a length boundary mid-turn, not a second user exchange. Token totals here are summed across both entries."
+      ]
+    },
+    {
+      "test_id": "Test2",
+      "title": "Test 2 \u2014 Distribution Analysis",
+      "prompt": "Analyze the distribution of housing prices. Report: minimum price, maximum price, average price, median price. Explain whether expensive outliers exist.",
+      "session_id": "55ea9233-eeca-4499-b369-656f73b00e84",
+      "model": "ollama/qwen3.5:9b",
+      "model_output": "No computation attempted -- session shows only a single memory_search call, no read of the CSV, no reported min/max/avg/median price, no outlier discussion.",
+      "time_taken_seconds": 0.0,
+      "time_taken_human": "0.0 sec",
+      "token_usage": {
+        "input": 52675,
+        "output": 96,
+        "total": 52771,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 1,
+        "breakdown": {
+          "memory_search": 1
+        }
+      },
+      "verdict": "FAIL -- incomplete, no answer produced",
+      "notes": [
+        "Cheapest and least-productive session in this set: 1 tool call, 0.0s elapsed, 52,771 tokens -- effectively abandoned after checking memory rather than the actual data file.",
+        "Contrasts directly with H01/H04/H05 (similar simple-stats prompts on the numeric housing benchmark), which all completed correctly in a handful of calls -- this session never got that far."
+      ]
+    },
+    {
+      "test_id": "Test3",
+      "title": "Test 3 \u2014 Correlation Ranking",
+      "prompt": "Find which numerical features are most related to house price. Calculate correlations and rank the features.",
+      "session_id": "dec927ca-8e72-49ca-a68d-f51a066fe2b6",
+      "model": "ollama/qwen3.5:9b",
+      "model_output": "No final answer -- session ends mid-loop with no correlation ranking ever produced.",
+      "time_taken_seconds": 828.313,
+      "time_taken_human": "13.8 min",
+      "token_usage": {
+        "input": 5904626,
+        "output": 24602,
+        "total": 5929228,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 125,
+        "breakdown": {
+          "memory_search": 1,
+          "exec": 74,
+          "read": 1,
+          "write": 48,
+          "edit": 1
+        }
+      },
+      "verdict": "CRITICAL FAIL -- Type E retry-loop / self-correction spiral",
+      "notes": [
+        "125 tool calls (74 exec, 48 write, 1 edit, 1 memory_search), ~13.8 minutes, 5,929,228 total tokens -- on a prompt that should be answerable with a single pandas .corr() call.",
+        "Transcript shows 50+ consecutive near-identical 'I apologize for all the syntax errors!' restatements, all citing bracket/parenthesis matching issues, without ever escaping via a genuinely different strategy -- same signature as the Type E failures already documented (T4/T8 in the hallucination set)."
+      ]
+    },
+    {
+      "test_id": "Test4",
+      "title": "Test 4 \u2014 Business Insight",
+      "prompt": "A real estate company wants to know what property characteristics increase house prices. Analyze the dataset and provide the top drivers of expensive houses.",
+      "session_id": "2b1ba93c-8086-4bb8-ba28-8efb018f8e3a",
+      "model": "ollama/qwen3.5:9b",
+      "model_output": "Ranked driver table: area/size (highest impact), bathrooms 3+, bedrooms 4+ combined with main-road location, air conditioning, parking+basement -- a plausible, coherent answer, though the rendered table has a garbled duplicated header row.",
+      "time_taken_seconds": 137.796,
+      "time_taken_human": "2.3 min",
+      "token_usage": {
+        "input": 233197,
+        "output": 5432,
+        "total": 238629,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 7,
+        "breakdown": {
+          "memory_search": 1,
+          "exec": 2,
+          "read": 1,
+          "write": 3
+        }
+      },
+      "verdict": "PARTIAL -- substantive correct-looking answer, minor presentation/formatting defect",
+      "notes": [
+        "Efficient session: only 7 tool calls, ~2.3 minutes, 238,629 tokens -- far cheaper than the retry-loop sessions while still producing real content.",
+        "One of only two sessions in this 8-test set to invoke memory_search (alongside Test3) -- worth checking why, since this is a fresh single-shot session where recalling memory shouldn't be necessary.",
+        "The formatting glitch (a malformed double-header markdown table) is a presentation defect distinct from the @tag-format compliance failures seen in H01/H08 -- content itself is not obviously wrong."
+      ]
+    },
+    {
+      "test_id": "Test5",
+      "title": "Test 5 \u2014 Categorical Analysis",
+      "prompt": "Analyze whether furnishing status affects housing price. Calculate average prices by furnishing category and explain the results.",
+      "session_id": "a3e566e1-72c9-4878-b59c-6afca18f01b8",
+      "model": "ollama/qwen3.5:9b",
+      "model_output": "Transcript excerpt available cuts off right after the model identifies the relevant columns (price, furnishingstatus) -- no furnishing-status price comparison visible in the captured transcript.",
+      "time_taken_seconds": 140.834,
+      "time_taken_human": "2.3 min",
+      "token_usage": {
+        "input": 271315,
+        "output": 5170,
+        "total": 276485,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 8,
+        "breakdown": {
+          "exec": 2,
+          "read": 1,
+          "write": 5
+        }
+      },
+      "verdict": "UNCLEAR -- needs verification against raw session",
+      "notes": [
+        "Tool log shows 8 calls (5 write, 2 exec, 1 read) -- more activity than a session that stopped at column identification would need, suggesting the session likely proceeded further than the available transcript excerpt shows.",
+        "Recommend checking the raw session transcript directly (not just the paste) before finalizing this verdict -- the extraction data implies more happened than was captured in the provided text."
+      ]
+    },
+    {
+      "test_id": "Test6",
+      "title": "Test 6 \u2014 Visualisation Generation",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. Create visualisations showing the main factors affecting house prices. Generate: 1. a price distribution histogram, 2. an area vs price scatter plot, 3. a bar chart of average price by furnishing status. Save each chart as a PNG file in the workspace and explain the key insight from each chart.",
+      "session_id": "b9a1cfe7-aa4f-4882-b926-910b6f2cd97c",
+      "model": "ollama/qwen3.5:9b",
+      "model_output": "Repeated claims of 'successfully loaded' data and intent to 'run this visualization script', but no PNG files were ultimately produced in the workspace (confirmed by direct inspection).",
+      "time_taken_seconds": 670.409,
+      "time_taken_human": "11.2 min",
+      "token_usage": {
+        "input": 4478109,
+        "output": 22272,
+        "total": 4500381,
+        "turns_logged": 2
+      },
+      "tool_calls": {
+        "total": 86,
+        "breakdown": {
+          "read": 3,
+          "exec": 42,
+          "write": 34,
+          "edit": 7
+        }
+      },
+      "verdict": "CRITICAL FAIL -- Type E retry-loop / self-correction spiral, confirmed zero output",
+      "notes": [
+        "86 tool calls (42 exec, 34 write, 7 edit, 3 read), ~11.2 minutes, two logged completion rounds totaling ~4.5M tokens.",
+        "CONFIRMED by direct workspace inspection: zero PNG files exist despite the transcript's repeated claims of progress -- the session's narrated confidence did not correspond to actual file output.",
+        "Only session in this 8-test set to use the edit tool (7 times) -- consistent with repeatedly trying to patch a broken script in place rather than rewriting cleanly from scratch."
+      ]
+    },
+    {
+      "test_id": "Test7",
+      "title": "Test 7 \u2014 Full ML Workflow",
+      "prompt": "The file data/housing_dataset.csv contains housing market data. Build a machine learning model to predict house prices. Preprocess the categorical variables, split into train/test sets, train a regression model, report evaluation metrics (RMSE and R\u00b2), and rank the most important features. Save your model results to a file called model_results.txt in the workspace.",
+      "session_id": "129441e1-60ef-422c-9edc-870d3f36cedc",
+      "model": "ollama/qwen3.5:9b",
+      "model_output": "No confirmed model_results.txt or working model produced -- session ends mid-loop.",
+      "time_taken_seconds": 930.161,
+      "time_taken_human": "15.5 min",
+      "token_usage": {
+        "input": 5857721,
+        "output": 25171,
+        "total": 5882892,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 114,
+        "breakdown": {
+          "read": 5,
+          "exec": 58,
+          "write": 49,
+          "process": 2
+        }
+      },
+      "verdict": "CRITICAL FAIL -- Type E retry-loop / self-correction spiral, most severe in this set",
+      "notes": [
+        "114 tool calls (58 exec, 49 write, 5 read, 2 process), ~15.5 minutes, 5,882,892 total tokens -- the single most expensive and longest session in this 8-test set.",
+        "Longest, most repetitive transcript of all 8 tests -- dozens of near-identical 'Let me try a completely different approach...' restatements, all citing heredoc truncation as the blocker.",
+        "Model explicitly self-diagnoses the blocker ('the heredoc keeps getting truncated') dozens of times without ever abandoning that approach for a genuinely different one -- same self-diagnosis-without-adaptation pattern seen in H07.",
+        "Uses process (background exec polling) twice -- alongside Test8, the only sessions in this set to do so, consistent with attempting genuine model-training runs rather than pure data exploration."
+      ]
+    },
+    {
+      "test_id": "Test8",
+      "title": "Test 8 \u2014 Executive PowerPoint (Email Task)",
+      "prompt": "You are a data analyst. The file data/housing_dataset.csv contains housing market data. Analyse the dataset end-to-end and create an executive slide deck. The deck should include: dataset overview, important trends, visualisations, key drivers of price, and business recommendations. Save the final presentation as a PowerPoint file called housing_analysis.pptx in the workspace.",
+      "session_id": "a0d657d1-09e6-4565-8e88-43a2d70697dc",
+      "model": "ollama/qwen3.5:9b",
+      "model_output": "Substantial narrated intention ('Let me create a comprehensive Python script...') but only 8 actual tool calls; no housing_analysis.pptx file exists in the workspace (confirmed by direct inspection).",
+      "time_taken_seconds": 61.277,
+      "time_taken_human": "1.0 min",
+      "token_usage": {
+        "input": 390602,
+        "output": 3251,
+        "total": 393853,
+        "turns_logged": 1
+      },
+      "tool_calls": {
+        "total": 8,
+        "breakdown": {
+          "read": 3,
+          "exec": 2,
+          "process": 1,
+          "write": 2
+        }
+      },
+      "verdict": "FAIL -- incomplete, confirmed zero output",
+      "notes": [
+        "Only 8 tool calls (3 read, 2 exec, 2 write, 1 process) despite a disproportionately large amount of reasoning text in the transcript -- much of the 'work' described was narrated intention rather than actual tool invocation, a lighter-weight variant of the Type B pattern (reasoning substituting for tool calls) rather than the heavier Type E retry-loop seen in Test3/6/7.",
+        "CONFIRMED by direct workspace inspection: no housing_analysis.pptx file exists, consistent with your own observation."
+      ]
+    }
+  ],
+  "aggregate": {
+    "total_tool_calls": 432,
+    "total_tokens": 20381560,
+    "total_time_seconds": 3141.557,
+    "verdict_counts": {
+      "PARTIAL": 2,
+      "FAIL": 2,
+      "CRITICAL": 3,
+      "UNCLEAR": 1
+    }
+  }
+}

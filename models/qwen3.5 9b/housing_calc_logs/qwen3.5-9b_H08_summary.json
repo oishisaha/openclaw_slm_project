@@ -1,0 +1,30 @@
+{
+  "test_id": "H08",
+  "title": "H08 \u2014 T-test Mainroad (Medium)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Is there a significant difference in house prices between houses on the main road and houses not on the main road? Use an independent samples t-test. Consider the difference significant if the p-value is less than 0.05. Report your answer in this exact format: @significant_difference[value] @p_value[value] where significant_difference is yes or no and p_value is rounded to four decimal places.",
+  "session_id": "0c303e08-ee85-4b72-80e2-a0b8f9dd3d1f",
+  "model": "ollama/qwen3.5:9b",
+  "ground_truth": "yes, 0.0000",
+  "model_output": "\"...statistically significant difference... p-value rounds to 0.0000...\" \u2014 conclusion correct, no @tag format emitted.",
+  "time_taken_seconds": 31.507,
+  "time_taken_human": "31.5 sec",
+  "token_usage": {
+    "input": 286280,
+    "output": 832,
+    "total": 287112
+  },
+  "tool_calls": {
+    "total": 7,
+    "breakdown": {
+      "read": 2,
+      "memory_search": 1,
+      "exec": 3,
+      "write": 1
+    }
+  },
+  "verdict": "PARTIAL \u2014 correct conclusion, format non-compliant",
+  "notes": [
+    "First read attempt used an incorrect absolute path and failed; recovered via memory_search (unique in this set) + find, then correctly-pathed read.",
+    "Correct scipy.stats.ttest_ind implementation once located; same python\u2192python3 retry pattern seen elsewhere."
+  ]
+}

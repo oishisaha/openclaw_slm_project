@@ -1,0 +1,179 @@
+# AGENTS.md - Your Workspace
+
+This folder is home for the duration of this evaluation session. Treat it that way.
+
+## Session Startup
+
+Use runtime-provided startup context first. That context may already include AGENTS.md, SOUL.md, and USER.md.
+
+Do not manually reread startup files unless:
+- The user explicitly asks
+- The provided context is missing something you need
+- You need a deeper follow-up read beyond the provided startup context
+
+## Every Turn Must End Cleanly
+
+A turn is only complete when it ends in either a tool call or an explicit final answer to the user. A thinking block by itself is not a complete turn — if you've reasoned through a step, act on it or report it, don't let the turn end silently.
+
+## When Something Isn't Working
+
+If the same tool call or approach fails twice in a row with the same error, do not retry it a third time unchanged. Either try a genuinely different method, or stop and clearly report the blocker to the user. Looping on a failing approach wastes the session and produces no result.
+
+Before claiming a tool, library, or capability is unavailable, check your own actions earlier in this session first — if you've already used it successfully, it's available. Don't assume a limitation without verifying.
+
+If a required library or tool fails once, and you take a corrective action (e.g. `pip install`), you must actually re-attempt the original operation using that fix before concluding it's still unavailable. Do not fall back to a substitute or proxy method without that retry — and never state a capability is "unavailable" if your own tool-call history in this session shows you took a step to make it available.
+
+When a fallback or workaround is used because something failed, describe the failure accurately in your final answer — state what actually happened (e.g. "the SHAP call raised an error") rather than a plausible-sounding but unconfirmed cause (e.g. "the library is unavailable") unless you've actually confirmed that's the reason.
+
+## Memory
+
+You wake up fresh each session. These files are your continuity:
+- Daily notes: `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
+- Long-term: `MEMORY.md` — curated memory of decisions, schema details, and findings worth carrying forward
+
+Capture what matters: dataset schemas you've confirmed, decisions made, and results worth reusing later in the same session.
+
+## Write It Down
+
+Memory is limited — if you want to remember something, write it to a file. Mental notes don't survive. Before writing memory files, read them first; write only concrete updates, never empty placeholders.
+
+## Red Lines
+
+- Do not delete, overwrite, or mutate a data file without confirming first — this includes stripping rows/columns as a side effect of "cleaning" or "fixing" data.
+- Do not run destructive shell commands.
+- `trash` > `rm` (recoverable beats gone forever).
+- Before changing any config, inspect existing state first and preserve/merge by default.
+- When in doubt, ask rather than assume.
+- Never answer a numeric question from a `read` call alone. Always verify via `exec` + code first.
+
+## Concept-to-Column Verification
+
+Before writing any other code — including exploratory calls like df.columns, df.head(), or df.info() — your very first exec call for any question referencing a named concept (e.g. "household income," "profit margin," "safety score," "district," "rental yield," "investment potential score") must be exactly this check:
+
+```python
+import pandas as pd
+df = pd.read_csv(<the file path from the prompt>)
+requested_concept = "<the exact concept being asked for>"
+matching_column = None  # set to the column name ONLY if its actual name and meaning directly match the concept
+print(f"Requested concept: {requested_concept}")
+print(f"Available columns: {list(df.columns)}")
+print(f"Direct match found: {matching_column}")
+```
+
+This must be your first tool call, before any other exploration of the file. Reading the columns as part of a different, later calculation does not satisfy this requirement — the check must run and print its result before you do anything else.
+
+Pay particular attention when the prompt asks you to rank, list the top N, calculate an average by category, or otherwise describes a specific deliverable (a table, a ranked list, a grouped summary). These prompts create a strong pull to skip straight to building that deliverable — this is exactly when this check is most likely to be skipped, and exactly when it matters most.
+
+- If `matching_column` is `None`, your response must end immediately after stating that fact. Do not write any further code, including a substitute calculation, an invented scoring formula, or a groupby using a different column — not even one you believe is reasonable, and not even if you plan to disclose it. The only addition allowed is a question ("Would you like me to use [column] as an approximation?") followed by stopping and waiting.
+- If you notice partway through writing code that you never ran this check, stop immediately, delete what you've written, and run the check first — do not finish the calculation you're already partway through.
+
+## Known-Correct API Values
+
+- CatBoost `loss_function` for binary log-loss classification is `'Logloss'` — capital L, no underscore, no other capitals. `'Log_loss'` and `'LogLoss'` will error.
+- CatBoostClassifier DOES support a `class_weights` parameter directly (unlike some earlier belief) — pass it as a list ordered by class index: `class_weights=[weight_for_0, weight_for_1]`. Do not substitute `scale_pos_weight` instead — it implements a different formula and will not match a prompt's explicit class_weights specification. If you're unsure whether a parameter exists, check with `CatBoostClassifier().get_params()` or the actual error message rather than assuming a limitation.
+- To retrieve per-iteration train/validation metric history from a fitted CatBoost model, use `model.get_evals_result()` — returns `{'learn': {'Logloss': [...]}, 'validation': {'Logloss': [...], 'AUC': [...]}}`. Do not guess at alternative method names (`get_fold_iterations_logloss`, `get_eval_metrics`, `get_fold_iterations_mse`, etc.) — these are not standard CatBoost methods. If unsure of a method name, check `dir(model)` or read the actual error message before retrying with another guess.
+- If a library call fails on a parameter's string value, do not guess more than twice. If you can't determine the correct value from the error message, stop and say so explicitly — do not silently substitute a different parameter that changes what was actually asked for (e.g. swapping loss functions changes the comparison being requested, not just the syntax).
+- sklearn's fitted `DecisionTreeClassifier.tree_` object has no `n_samples` attribute — the correct attribute for per-node sample counts is `n_node_samples` (e.g. `model.tree_.n_node_samples[leaf_idx]`). `AttributeError: 'sklearn.tree._tree.Tree' object has no attribute 'n_samples'` means this mistake, not a missing installation.
+
+## Champion Model — Required Script
+
+The first time a task requires training the CatBoost Logloss champion model (Pipeline B, class-weighted), run this exact script, unmodified, before doing anything else for that question:
+
+```python
+import pandas as pd
+import numpy as np
+from catboost import CatBoostClassifier
+
+train = pd.read_csv('data/german_train_pipelineB.csv')
+val = pd.read_csv('data/german_val_pipelineB.csv')
+
+X_train = train.drop(columns=['target_good'])
+y_train = train['target_good']
+X_val = val.drop(columns=['target_good'])
+y_val = val['target_good']
+
+cat_features = X_train.select_dtypes(include=['object']).columns.tolist()
+counts = y_train.value_counts()
+total_train = len(y_train)
+weights = [total_train / (2 * counts[0]), total_train / (2 * counts[1])]
+
+model = CatBoostClassifier(
+    loss_function='Logloss', eval_metric='AUC', iterations=1000,
+    learning_rate=0.05, depth=6, random_seed=42, use_best_model=True,
+    class_weights=weights, cat_features=cat_features, verbose=False
+)
+model.fit(X_train, y_train, eval_set=(X_val, y_val))
+
+results = model.get_evals_result()
+train_logloss_final = results['learn']['Logloss'][-1]
+val_logloss_final = results['validation']['Logloss'][-1]
+
+val_probs = model.predict_proba(X_val)[:, 1]
+train_probs = model.predict_proba(X_train)[:, 1]
+
+np.save('champion_val_probs.npy', val_probs)
+np.save('champion_train_probs.npy', train_probs)
+y_val.to_csv('champion_y_val.csv', index=False)
+
+print(f'train_logloss_final={train_logloss_final:.4f} val_logloss_final={val_logloss_final:.4f}')
+```
+
+Every subsequent question that references "the champion model" (confusion matrix, threshold sweep, metrics, SHAP) must load the saved arrays instead of retraining:
+
+```python
+import numpy as np
+import pandas as pd
+val_probs = np.load('champion_val_probs.npy')
+y_val = pd.read_csv('champion_y_val.csv')['target_good']
+```
+
+Do not retrain the model for these downstream questions under any circumstances. If `champion_val_probs.npy` does not exist yet, run the training script above first, exactly as written.
+
+Before writing any code for a question that references "the champion model," first check whether `champion_val_probs.npy` already exists in the workspace:
+
+```python
+import os
+if os.path.exists('champion_val_probs.npy'):
+    print("Champion predictions found — loading, not retraining.")
+else:
+    print("Champion predictions not found — must run the training script first.")
+```
+
+Run this check first, every time, before deciding whether to train or load. Do not skip this check because you assume you remember whether the model was already trained earlier in the session — memory of prior turns is unreliable at this stage; the file check is not.
+
+## No Cross-Question Value Reuse
+
+Never reuse a numeric result from a different question in this session without recomputing it fresh for the current question, even if a value seems to fit. If a number you're about to report exactly matches a value already given for a different question or metric, treat that as a strong signal of an error, not a coincidence — stop and recompute independently before submitting it. This applies even when the two questions involve different models (e.g. a Random Forest threshold sweep landing on the exact same threshold and cost as an earlier CatBoost sweep is not plausible and should be re-run).
+
+## External vs Internal
+
+Safe to do freely: read files, explore, run analysis and code within this workspace, search the web if needed.
+Ask first: anything that leaves the machine, anything you're uncertain about.
+
+## Tools
+
+Skills provide your tools. When you need one, check its `SKILL.md`. Keep local notes (paths, credentials, environment quirks) in `TOOLS.md`.
+
+## File Generation Requirements
+
+When a task requires charts embedded in a document or presentation, you must use this exact pattern in your code — do not write text-only slides when visualisations are requested:
+
+```python
+from pptx.util import Inches
+slide.shapes.add_picture('chart_filename.png', Inches(1), Inches(1.5), width=Inches(8))
+```
+
+Every chart you generate and save as a PNG in this task must be inserted into the deck using `add_picture()` before the file is saved. A slide that only describes a chart in text, without this call having been made, is incomplete. Before calling `prs.save(...)`, count how many `add_picture()` calls you made and confirm it matches the number of charts the task required.
+
+## Long Session Discipline
+
+This workspace may host long multi-turn sessions (20+ turns). Context budget is finite and shared across the whole session — spending it carelessly early can cause failures many turns later.
+
+- When an approach fails, state the fix once and move directly to retrying it. Do not restate the same error diagnosis, apology, or explanation more than once per turn — repeated self-narration burns context that later turns depend on.
+- In sessions with many turns, periodically write key confirmed facts to a memory file (e.g. `MEMORY.md`) — which libraries are installed, which models are trained and their metrics, correct parameter values you've discovered. Do not rely solely on conversation history staying accessible; earlier turns may become unavailable as the session grows.
+
+## Background Process Handling
+
+When an `exec` call spawns a long-running background process (e.g. model training), poll that same process/session ID repeatedly until it completes, rather than abandoning it and launching a new, duplicate run. A single poll with no result is not evidence of failure — wait and re-poll the same ID at least 3-4 times before concluding something is wrong.
+
+Never start a second instance of the same expensive operation (e.g. re-fitting the same model) while a prior instance may still be running. If you're unsure whether a process is still active, check its status explicitly rather than guessing and restarting.

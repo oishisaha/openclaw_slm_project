@@ -1,0 +1,4 @@
+#!/usr/bin/env python3\nimport pandas as pd, matplotlib.pyplot as plt, numpy as np\ndata = pd.read_csv('housing_dataset.csv')  # Load housing price data from CSV file stored in workspace/data folder relative to script location.\nprint(f"Loaded {len(data)} records. Price range: ${data['price'].min():,.0f}-${data['price'].max():,.0f}")\n\n# CHART 1 - HISTOGRAM of house prices across dataset showing frequency distribution with mean and median statistics displayed on right side for easy reference during analysis review sessions.\
+fig, ax = plt.subplots(figsize=(8.5,6)) \navax.hist(data['price'], bins=30)\np tight(title='Price Distribution\nFrequency of all houses at each price level',\n        xlabel=f'House Price (${data["price"].iloc[0]//1e9:.2f}B)', ylabel='Count')  
+mean = data['price'].mean(); median = data['price']
+ax.text(0.98, 0.95,f'Mean: ${{mean/1e6:.2f}}M | Median:\n${median

@@ -1,0 +1,18 @@
+[
+  {
+    "ts": "2026-07-22T04:33:46.903Z",
+    "seq": 5,
+    "input": 183954,
+    "output": 812,
+    "reasoningTokens": 197,
+    "total": 184766
+  },
+  {
+    "ts": "2026-07-22T04:34:07.296Z",
+    "seq": 5,
+    "input": 43273,
+    "output": 173,
+    "reasoningTokens": 48,
+    "total": 43446
+  }
+]

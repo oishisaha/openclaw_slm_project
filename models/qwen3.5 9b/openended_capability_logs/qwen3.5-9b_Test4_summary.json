@@ -1,0 +1,31 @@
+{
+  "test_id": "Test4",
+  "title": "Test 4 \u2014 Business Insight",
+  "prompt": "A real estate company wants to know what property characteristics increase house prices. Analyze the dataset and provide the top drivers of expensive houses.",
+  "session_id": "2b1ba93c-8086-4bb8-ba28-8efb018f8e3a",
+  "model": "ollama/qwen3.5:9b",
+  "model_output": "Ranked driver table: area/size (highest impact), bathrooms 3+, bedrooms 4+ combined with main-road location, air conditioning, parking+basement -- a plausible, coherent answer, though the rendered table has a garbled duplicated header row.",
+  "time_taken_seconds": 137.796,
+  "time_taken_human": "2.3 min",
+  "token_usage": {
+    "input": 233197,
+    "output": 5432,
+    "total": 238629,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 7,
+    "breakdown": {
+      "memory_search": 1,
+      "exec": 2,
+      "read": 1,
+      "write": 3
+    }
+  },
+  "verdict": "PARTIAL -- substantive correct-looking answer, minor presentation/formatting defect",
+  "notes": [
+    "Efficient session: only 7 tool calls, ~2.3 minutes, 238,629 tokens -- far cheaper than the retry-loop sessions while still producing real content.",
+    "One of only two sessions in this 8-test set to invoke memory_search (alongside Test3) -- worth checking why, since this is a fresh single-shot session where recalling memory shouldn't be necessary.",
+    "The formatting glitch (a malformed double-header markdown table) is a presentation defect distinct from the @tag-format compliance failures seen in H01/H08 -- content itself is not obviously wrong."
+  ]
+}

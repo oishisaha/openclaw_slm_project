@@ -1,0 +1,29 @@
+{
+  "test_id": "H11",
+  "title": "H11 \u2014 Multiple Regression R\u00b2 (Hard)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Perform multiple linear regression to predict house price using area and bathrooms as predictors. Only use rows without missing values in these three columns. Use a significance level of 0.05 for the predictors. Calculate the R-squared value of the model. Report your answer in this exact format: @significant_predictor[predictor_1,predictor_2] @r_squared[value] where predictor_1 corresponds to area, predictor_2 to bathrooms, each is yes or no based on p-value < 0.05, and r_squared is rounded to four decimal places",
+  "session_id": "51034fd9-215a-436b-9b9a-96743da387d3",
+  "model": "ollama/qwen3.5:9b",
+  "ground_truth": "yes,yes / 0.4651",
+  "model_output": "@significant_predictor[yes,yes] @r_squared[0.4651]",
+  "time_taken_seconds": 40.938,
+  "time_taken_human": "40.9 sec",
+  "token_usage": {
+    "input": 206690,
+    "output": 1190,
+    "total": 207880
+  },
+  "tool_calls": {
+    "total": 4,
+    "breakdown": {
+      "read": 1,
+      "write": 1,
+      "exec": 2
+    }
+  },
+  "verdict": "PASS",
+  "notes": [
+    "Exact match using statsmodels OLS.",
+    "Code quality flag: fragile try/except sklearn-fallback structure with an undefined-variable risk in the unused fallback branch \u2014 did not affect this result since the primary path executed successfully."
+  ]
+}

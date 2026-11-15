@@ -1,0 +1,29 @@
+{
+  "test_id": "H10",
+  "title": "H10 \u2014 Linear Regression RMSE (Hard)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Build a linear regression model using Scikit-learn to predict house price using area, bedrooms, bathrooms, and stories as features. Split the data 80/20 train/test with random_state=42. Ignore rows with missing values in any of these columns. Evaluate the model using RMSE. Report your answer in this exact format: @model_rmse[value] where value is a positive number rounded to two decimal places.",
+  "session_id": "7842fc09-f17b-412b-9dee-45fc16d2a14b",
+  "model": "ollama/qwen3.5:9b",
+  "ground_truth": "1,567,718.61",
+  "model_output": "@model_rmse[1567718.61]",
+  "time_taken_seconds": 39.746,
+  "time_taken_human": "39.7 sec",
+  "token_usage": {
+    "input": 250444,
+    "output": 1024,
+    "total": 251468
+  },
+  "tool_calls": {
+    "total": 5,
+    "breakdown": {
+      "read": 1,
+      "write": 2,
+      "exec": 2
+    }
+  },
+  "verdict": "PASS",
+  "notes": [
+    "Exact match using specified sklearn methodology (80/20 split, random_state=42).",
+    "First write targeted a nonexistent path, silently corrected on second write."
+  ]
+}

@@ -1,0 +1,11 @@
+question_id,session_uuid
+HT6_SafetyScoreRegression,f8f377c9-52df-4128-b521-3a10c2bbdf5b
+HT3_HouseholdIncome,75c67bd0-2cf9-4b6d-976e-f62b58597b6f
+HT4_SquareFeet,7e4f5c4e-89fa-4fde-8979-779493f6fa76
+HT1_District,47e7571a-1a37-40d5-b334-0c842fed881a
+HT5_InvestmentScore,1c058636-5700-4ca5-89d8-b55a28b4cd82
+HT7_SellerProfitMargin_ABORTED,08732818-b227-48b3-8ebe-f7e38fc01fc3
+HT9_RentalYield,3a3df014-c3d1-4cc5-8233-5fd93e7a5379
+DirtyData_InitExploration,0c3dacd9-9a27-4b11-bea2-718047290a33
+HT8_SizeSqft,331c5904-80c1-4f7c-b527-84870c7fca7f
+HT2_MonthlyTrend,189abfb6-0a4c-4d83-b9c6-56328ccf2e6f

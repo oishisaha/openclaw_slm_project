@@ -1,0 +1,27 @@
+{
+  "test_id": "H10",
+  "title": "H10 \u2014 Linear Regression RMSE",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Build a linear regression model using Scikit-learn to predict house price using area, bedrooms, bathrooms, and stories as features. Split the data 80/20 train/test with random_state=42. Ignore rows with missing values in any of these columns. Evaluate the model using RMSE. Report your answer in this exact format: @model_rmse[value] where value is a positive number rounded to two decimal places.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "@model_rmse[1567718.61]",
+  "time_taken_seconds": 156.893,
+  "time_taken_human": "2.6 min",
+  "token_usage": {
+    "input": 579327,
+    "output": 2389,
+    "total": 581716,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 12,
+    "breakdown": {
+      "read": 1,
+      "exec": 8,
+      "edit": 3
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": [
+    "Matches qwen3.5:9b's answer on the same prompt exactly (1567718.61), despite gemma4:12b needing 3 tool-call rounds (~103 lines of extracted calls, 8 exec/3 edit/1 read) vs qwen3.5:9b's more direct path."
+  ]
+}

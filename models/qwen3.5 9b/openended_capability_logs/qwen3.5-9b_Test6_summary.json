@@ -1,0 +1,31 @@
+{
+  "test_id": "Test6",
+  "title": "Test 6 \u2014 Visualisation Generation",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Create visualisations showing the main factors affecting house prices. Generate: 1. a price distribution histogram, 2. an area vs price scatter plot, 3. a bar chart of average price by furnishing status. Save each chart as a PNG file in the workspace and explain the key insight from each chart.",
+  "session_id": "b9a1cfe7-aa4f-4882-b926-910b6f2cd97c",
+  "model": "ollama/qwen3.5:9b",
+  "model_output": "Repeated claims of 'successfully loaded' data and intent to 'run this visualization script', but no PNG files were ultimately produced in the workspace (confirmed by direct inspection).",
+  "time_taken_seconds": 670.409,
+  "time_taken_human": "11.2 min",
+  "token_usage": {
+    "input": 4478109,
+    "output": 22272,
+    "total": 4500381,
+    "turns_logged": 2
+  },
+  "tool_calls": {
+    "total": 86,
+    "breakdown": {
+      "read": 3,
+      "exec": 42,
+      "write": 34,
+      "edit": 7
+    }
+  },
+  "verdict": "CRITICAL FAIL -- Type E retry-loop / self-correction spiral, confirmed zero output",
+  "notes": [
+    "86 tool calls (42 exec, 34 write, 7 edit, 3 read), ~11.2 minutes, two logged completion rounds totaling ~4.5M tokens.",
+    "CONFIRMED by direct workspace inspection: zero PNG files exist despite the transcript's repeated claims of progress -- the session's narrated confidence did not correspond to actual file output.",
+    "Only session in this 8-test set to use the edit tool (7 times) -- consistent with repeatedly trying to patch a broken script in place rather than rewriting cleanly from scratch."
+  ]
+}

@@ -1,0 +1,4 @@
+  File "<stdin>", line 4
+    mean_p, median_price = data['price'].mean(), df[\"price\"].median()
+                                                     ^
+SyntaxError: unexpected character after line continuation character

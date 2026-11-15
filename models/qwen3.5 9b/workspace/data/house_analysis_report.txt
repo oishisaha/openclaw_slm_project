@@ -1,0 +1,4 @@
+  File "/home/vboxuser/.openclaw/workspace/analyze_housing_v2.py", line 16
+    print('='*60, '\n\n--- FILE METADATA ---', '\nNumber of rows (records): {}'.format(len(df)), '\nNumber of columns (features): {}.
+                                                                                                 ^
+SyntaxError: unterminated string literal (detected at line 16)

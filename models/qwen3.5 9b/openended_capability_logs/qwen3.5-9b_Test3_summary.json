@@ -1,0 +1,31 @@
+{
+  "test_id": "Test3",
+  "title": "Test 3 \u2014 Correlation Ranking",
+  "prompt": "Find which numerical features are most related to house price. Calculate correlations and rank the features.",
+  "session_id": "dec927ca-8e72-49ca-a68d-f51a066fe2b6",
+  "model": "ollama/qwen3.5:9b",
+  "model_output": "No final answer -- session ends mid-loop with no correlation ranking ever produced.",
+  "time_taken_seconds": 828.313,
+  "time_taken_human": "13.8 min",
+  "token_usage": {
+    "input": 5904626,
+    "output": 24602,
+    "total": 5929228,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 125,
+    "breakdown": {
+      "memory_search": 1,
+      "exec": 74,
+      "read": 1,
+      "write": 48,
+      "edit": 1
+    }
+  },
+  "verdict": "CRITICAL FAIL -- Type E retry-loop / self-correction spiral",
+  "notes": [
+    "125 tool calls (74 exec, 48 write, 1 edit, 1 memory_search), ~13.8 minutes, 5,929,228 total tokens -- on a prompt that should be answerable with a single pandas .corr() call.",
+    "Transcript shows 50+ consecutive near-identical 'I apologize for all the syntax errors!' restatements, all citing bracket/parenthesis matching issues, without ever escaping via a genuinely different strategy -- same signature as the Type E failures already documented (T4/T8 in the hallucination set)."
+  ]
+}

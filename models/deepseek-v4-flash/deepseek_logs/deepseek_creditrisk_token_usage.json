@@ -1,0 +1,266 @@
+[
+  {
+    "ts": "2026-07-17T07:19:07.587Z",
+    "seq": 5,
+    "input": 82474,
+    "output": 2396,
+    "cacheRead": 18176,
+    "reasoningTokens": 1429,
+    "total": 103046
+  },
+  {
+    "ts": "2026-07-17T07:54:18.461Z",
+    "seq": 5,
+    "input": 26674,
+    "output": 316,
+    "cacheRead": 28544,
+    "reasoningTokens": 98,
+    "total": 55534
+  },
+  {
+    "ts": "2026-07-17T07:55:03.090Z",
+    "seq": 5,
+    "input": 115032,
+    "output": 1396,
+    "cacheRead": 1024,
+    "reasoningTokens": 624,
+    "total": 117452
+  },
+  {
+    "ts": "2026-07-17T07:55:47.924Z",
+    "seq": 5,
+    "input": 49167,
+    "output": 685,
+    "cacheRead": 9984,
+    "reasoningTokens": 160,
+    "total": 59836
+  },
+  {
+    "ts": "2026-07-17T07:56:57.447Z",
+    "seq": 5,
+    "input": 35786,
+    "output": 518,
+    "cacheRead": 27648,
+    "reasoningTokens": 70,
+    "total": 63952
+  },
+  {
+    "ts": "2026-07-17T07:59:27.409Z",
+    "seq": 5,
+    "input": 64796,
+    "output": 849,
+    "cacheRead": 640,
+    "reasoningTokens": 150,
+    "total": 66285
+  },
+  {
+    "ts": "2026-07-17T08:05:37.006Z",
+    "seq": 5,
+    "input": 36924,
+    "output": 533,
+    "cacheRead": 30720,
+    "reasoningTokens": 44,
+    "total": 68177
+  },
+  {
+    "ts": "2026-07-17T08:06:09.508Z",
+    "seq": 5,
+    "input": 69353,
+    "output": 300,
+    "total": 69653
+  },
+  {
+    "ts": "2026-07-17T08:06:48.306Z",
+    "seq": 5,
+    "input": 210,
+    "output": 1412,
+    "cacheRead": 34816,
+    "reasoningTokens": 1248,
+    "total": 36438
+  },
+  {
+    "ts": "2026-07-17T08:08:14.383Z",
+    "seq": 5,
+    "input": 152873,
+    "output": 1226,
+    "cacheRead": 63488,
+    "reasoningTokens": 171,
+    "total": 217587
+  },
+  {
+    "ts": "2026-07-17T08:09:21.076Z",
+    "seq": 5,
+    "input": 37453,
+    "output": 94,
+    "reasoningTokens": 46,
+    "total": 37547
+  },
+  {
+    "ts": "2026-07-17T08:10:28.624Z",
+    "seq": 5,
+    "input": 76356,
+    "output": 755,
+    "reasoningTokens": 50,
+    "total": 77111
+  },
+  {
+    "ts": "2026-07-17T08:12:17.344Z",
+    "seq": 5,
+    "input": 43788,
+    "output": 1198,
+    "cacheRead": 74752,
+    "reasoningTokens": 325,
+    "total": 119738
+  },
+  {
+    "ts": "2026-07-17T08:13:28.534Z",
+    "seq": 5,
+    "input": 41898,
+    "output": 850,
+    "cacheRead": 39936,
+    "reasoningTokens": 106,
+    "total": 82684
+  },
+  {
+    "ts": "2026-07-17T08:13:53.988Z",
+    "seq": 5,
+    "input": 648,
+    "output": 150,
+    "cacheRead": 40960,
+    "reasoningTokens": 77,
+    "total": 41758
+  },
+  {
+    "ts": "2026-07-17T08:14:32.649Z",
+    "seq": 5,
+    "input": 84444,
+    "output": 1296,
+    "reasoningTokens": 369,
+    "total": 85740
+  },
+  {
+    "ts": "2026-07-17T08:16:45.094Z",
+    "seq": 5,
+    "input": 84779,
+    "output": 1005,
+    "cacheRead": 44032,
+    "reasoningTokens": 48,
+    "total": 129816
+  },
+  {
+    "ts": "2026-07-17T08:17:18.357Z",
+    "seq": 5,
+    "input": 55936,
+    "output": 545,
+    "cacheRead": 34816,
+    "reasoningTokens": 25,
+    "total": 91297
+  },
+  {
+    "ts": "2026-07-17T08:20:36.365Z",
+    "seq": 5,
+    "input": 93871,
+    "output": 1067,
+    "cacheRead": 46080,
+    "reasoningTokens": 54,
+    "total": 141018
+  },
+  {
+    "ts": "2026-07-17T08:22:58.884Z",
+    "seq": 5,
+    "input": 23077,
+    "output": 2203,
+    "cacheRead": 223232,
+    "reasoningTokens": 329,
+    "total": 248512
+  },
+  {
+    "ts": "2026-07-17T08:25:15.438Z",
+    "seq": 5,
+    "input": 103438,
+    "output": 1104,
+    "cacheRead": 50176,
+    "reasoningTokens": 23,
+    "total": 154718
+  },
+  {
+    "ts": "2026-07-17T08:26:33.867Z",
+    "seq": 5,
+    "input": 3441,
+    "output": 1722,
+    "cacheRead": 155648,
+    "reasoningTokens": 128,
+    "total": 160811
+  },
+  {
+    "ts": "2026-07-17T08:28:55.766Z",
+    "seq": 5,
+    "input": 74399,
+    "output": 3897,
+    "cacheRead": 426496,
+    "reasoningTokens": 410,
+    "total": 504792
+  },
+  {
+    "ts": "2026-07-17T08:30:00.731Z",
+    "seq": 5,
+    "input": 64147,
+    "output": 1102,
+    "cacheRead": 115712,
+    "reasoningTokens": 74,
+    "total": 180961
+  },
+  {
+    "ts": "2026-07-17T08:30:59.559Z",
+    "seq": 5,
+    "input": 64222,
+    "output": 1986,
+    "cacheRead": 121344,
+    "reasoningTokens": 158,
+    "total": 187552
+  },
+  {
+    "ts": "2026-07-17T08:32:38.313Z",
+    "seq": 5,
+    "input": 64975,
+    "output": 828,
+    "cacheRead": 62464,
+    "reasoningTokens": 29,
+    "total": 128267
+  },
+  {
+    "ts": "2026-07-17T08:36:33.875Z",
+    "seq": 5,
+    "input": 317634,
+    "output": 4359,
+    "cacheRead": 215808,
+    "reasoningTokens": 632,
+    "total": 537801
+  },
+  {
+    "ts": "2026-07-17T08:40:01.372Z",
+    "seq": 5,
+    "input": 540,
+    "output": 8267,
+    "cacheRead": 219520,
+    "reasoningTokens": 1099,
+    "total": 228327
+  },
+  {
+    "ts": "2026-07-17T08:58:21.716Z",
+    "seq": 5,
+    "input": 151632,
+    "output": 542,
+    "reasoningTokens": 127,
+    "total": 152174
+  },
+  {
+    "ts": "2026-07-17T08:59:04.400Z",
+    "seq": 5,
+    "input": 73999,
+    "output": 183,
+    "cacheRead": 86784,
+    "reasoningTokens": 59,
+    "total": 160966
+  }
+]

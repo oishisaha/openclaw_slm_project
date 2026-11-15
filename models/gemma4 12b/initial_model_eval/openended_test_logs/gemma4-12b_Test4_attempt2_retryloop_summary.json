@@ -1,0 +1,29 @@
+{
+  "test_id": "Test4_attempt2_retryloop",
+  "title": "Test4 Attempt 2 \u2014 Type E Retry-Loop Spiral",
+  "prompt": "A real estate company wants to know what property characteristics increase house prices. Analyze the dataset and provide the top drivers of expensive houses.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "",
+  "time_taken_seconds": 234.562,
+  "time_taken_human": "3.9 min",
+  "token_usage": {
+    "input": 1057615,
+    "output": 5110,
+    "total": 1062725,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 21,
+    "breakdown": {
+      "exec": 20,
+      "read": 1
+    }
+  },
+  "verdict": "CRITICAL FAIL",
+  "notes": [
+    "Type E: Retry-Loop / Self-Correction Spiral. 21 extracted tool calls, 20 of which are consecutive near-identical inline python3 -c exec calls performing the same correlation analysis, each attempt making only trivial syntax variations (escaped newline handling, quote style, one typo'd variable name 'entity_list' vs 'enity_list').",
+    "Never escaped into a different strategy (e.g. writing to a .py file and executing, which succeeded in other tests).",
+    "Terminated with an empty assistant content block ([]) \u2014 no text, no tool call, no answer of any kind.",
+    "This is a genuine failure distinct from Attempt 1's hard infra error: model reasoned correctly about WHAT to compute but got stuck entirely on HOW to execute it via the shell tool."
+  ]
+}

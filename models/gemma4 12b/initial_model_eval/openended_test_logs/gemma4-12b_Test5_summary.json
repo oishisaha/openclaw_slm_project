@@ -1,0 +1,27 @@
+{
+  "test_id": "Test5",
+  "title": "Test5 \u2014 Furnishing Status Effect on Price",
+  "prompt": "Analyze whether furnishing status affects housing price. Calculate average prices by furnishing category and explain the results.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Furnished ~5,495,700 / Semi-furnished ~4,907,524 / Unfurnished ~4,013,831. Concluded furnishing status is a strong positive indicator of price.",
+  "time_taken_seconds": 30.753,
+  "time_taken_human": "30.8 sec",
+  "token_usage": {
+    "input": 164289,
+    "output": 386,
+    "total": 164675,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 4,
+    "breakdown": {
+      "memory_search": 1,
+      "exec": 2,
+      "read": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": [
+    "Note: these open-ended-test averages differ from H07's benchmark averages (708413.04/496000.00/314464.71) for the same categories \u2014 worth checking whether Test5 used a different subset/grouping logic or made a computation error, since H07 and Test5 should reconcile if both are correct."
+  ]
+}

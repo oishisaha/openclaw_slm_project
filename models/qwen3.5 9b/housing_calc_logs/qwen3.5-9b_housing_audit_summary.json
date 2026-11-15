@@ -1,0 +1,331 @@
+{
+  "model": "ollama/qwen3.5:9b",
+  "deployment": "Local (host-laptop Ollama via VirtualBox NAT, 10.0.2.2:11434)",
+  "test_set": "Housing Benchmark \u2014 Closed-Form Accuracy (H01-H11) \u2014 housing_dataset.csv",
+  "date": "2026-08-04",
+  "tests": [
+    {
+      "test_id": "H01",
+      "title": "H01 \u2014 Mean Price (Easy)",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. Calculate the mean price of all houses in the dataset. Ignore rows with missing values in the price column. Use Python to calculate the mean. Report your answer in this exact format: @mean_price[value] where value is a number rounded to two decimal places.",
+      "session_id": "cb2cebfd-e724-45a8-ace7-affd704c4a6e",
+      "model": "ollama/qwen3.5:9b",
+      "ground_truth": "@mean_price[4766729.25]",
+      "model_output": "\"Mean house price: \u20b94,766,729.25\" \u2014 value correct, but no @mean_price[] tag emitted; response adds an unrequested fabricated \"Mumbai residential market\" narrative not supported by the data.",
+      "time_taken_seconds": 38.815,
+      "time_taken_human": "38.8 sec",
+      "token_usage": {
+        "input": 410959,
+        "output": 975,
+        "total": 411934
+      },
+      "tool_calls": {
+        "total": 9,
+        "breakdown": {
+          "read": 3,
+          "write": 2,
+          "exec": 4
+        }
+      },
+      "verdict": "PARTIAL \u2014 correct value, format non-compliant, unsolicited fabricated context",
+      "notes": [
+        "Two abandoned write attempts (relative-path failures) before a working inline heredoc computation.",
+        "Script correctly prints the @mean_price[] tag internally, but the final chat response did not surface it in that format."
+      ]
+    },
+    {
+      "test_id": "H02",
+      "title": "H02 \u2014 Median Area (Easy)",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. What is the median area of houses in the dataset? Ignore rows with missing values in the area column. Report your answer in this exact format: @median_area[value] where value is a number rounded to two decimal places.",
+      "session_id": "744151ff-1ce2-451e-a411-92fa44544543",
+      "model": "ollama/qwen3.5:9b",
+      "ground_truth": "@median_area[4600.00]",
+      "model_output": "@median_area[4643] \u2014 computed via manual bash/awk sort + averaging two adjacent values, not a statistics library call.",
+      "time_taken_seconds": 53.386,
+      "time_taken_human": "53.4 sec",
+      "token_usage": {
+        "input": 594121,
+        "output": 1365,
+        "total": 595486
+      },
+      "tool_calls": {
+        "total": 13,
+        "breakdown": {
+          "read": 2,
+          "write": 2,
+          "exec": 9
+        }
+      },
+      "verdict": "FAIL \u2014 wrong value",
+      "notes": [
+        "First exec used bare \"python\" (likely failed silently, no python3 retry) \u2014 abandoned working Python approach for fragile bash/awk pipelines instead.",
+        "One exec command is malformed shell syntax; row-count assumptions shift across the session (208, then 546, then 278/279)."
+      ]
+    },
+    {
+      "test_id": "H03",
+      "title": "H03 \u2014 Price Normality (Easy)",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. Check if the distribution of house prices follows a normal distribution. Consider the distribution as normal if the absolute value of skewness is less than 0.5. Calculate skewness using Python's built-in function. Report your answer in this exact format: @price_distribution[status] where status is either normal or not_normal.",
+      "session_id": "80354cdc-6dff-435f-8b96-6fe1c8af5911",
+      "model": "ollama/qwen3.5:9b",
+      "ground_truth": "@price_distribution[not_normal]",
+      "model_output": "\"...|skewness|=0... distribution is normal\" \u2192 @price_distribution[normal] implied.",
+      "time_taken_seconds": 15.388,
+      "time_taken_human": "15.4 sec",
+      "token_usage": {
+        "input": 160727,
+        "output": 625,
+        "total": 161352
+      },
+      "tool_calls": {
+        "total": 5,
+        "breakdown": {
+          "read": 2,
+          "exec": 3
+        }
+      },
+      "verdict": "FAIL \u2014 wrong conclusion (unverifiable computation)",
+      "notes": [
+        "The logged exec call contains a technically correct manual skewness formula \u2014 script itself is sound.",
+        "Extraction only captures the tool CALL, not its stdout \u2014 the claimed skewness=0 could not be verified from this data alone and is very unlikely to be correct given ground truth is not_normal."
+      ]
+    },
+    {
+      "test_id": "H04",
+      "title": "H04 \u2014 Proportion Air Conditioning (Easy)",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. What proportion of houses in the dataset have air conditioning? Report the proportion as a decimal rounded to two decimal places. Report your answer in this exact format: @proportion_aircon[value] where value is a number between 0 and 1.",
+      "session_id": "61e92427-d0a4-4aab-a9b4-49c4f7f78078",
+      "model": "ollama/qwen3.5:9b",
+      "ground_truth": "@proportion_aircon[0.32]",
+      "model_output": "@proportion_aircon[0.32]",
+      "time_taken_seconds": 17.195,
+      "time_taken_human": "17.2 sec",
+      "token_usage": {
+        "input": 158737,
+        "output": 219,
+        "total": 158956
+      },
+      "tool_calls": {
+        "total": 3,
+        "breakdown": {
+          "read": 1,
+          "exec": 1,
+          "update_plan": 1
+        }
+      },
+      "verdict": "PASS",
+      "notes": [
+        "Most efficient session in the set \u2014 3 tool calls, single awk one-liner, correct on first attempt.",
+        "Only question in the housing set to invoke update_plan."
+      ]
+    },
+    {
+      "test_id": "H05",
+      "title": "H05 \u2014 Pearson Correlation (Easy)",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. Calculate the Pearson correlation coefficient between house price and area. Ignore rows with missing values in either column. Report your answer in this exact format: @correlation_price_area[value] where value is a number between -1 and 1 rounded to two decimal places.",
+      "session_id": "56255cf6-af27-4dec-92b0-a9ed773d1cd3",
+      "model": "ollama/qwen3.5:9b",
+      "ground_truth": "@correlation_price_area[0.54]",
+      "model_output": "@correlation_price_area[0.54]",
+      "time_taken_seconds": 21.847,
+      "time_taken_human": "21.8 sec",
+      "token_usage": {
+        "input": 141288,
+        "output": 413,
+        "total": 141701
+      },
+      "tool_calls": {
+        "total": 3,
+        "breakdown": {
+          "read": 2,
+          "exec": 1
+        }
+      },
+      "verdict": "PASS",
+      "notes": [
+        "Manual Pearson formula implementation; correct only because dataset happens to have no missing price/area values (missing-value guard uses math.isnan on an already-cast float, which would never trigger on truly missing data)."
+      ]
+    },
+    {
+      "test_id": "H06",
+      "title": "H06 \u2014 Outlier Count IQR (Medium)",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. Identify outliers in house prices using the IQR method. Apply the 1.5\u00d7IQR rule: consider any price below Q1 - 1.5\u00d7IQR or above Q3 + 1.5\u00d7IQR as an outlier. Report the total number of outliers. Report your answer in this exact format: @total_outliers[value] where value is an integer.",
+      "session_id": "44129cfc-1b92-47a8-b36a-f39f6bfd0517",
+      "model": "ollama/qwen3.5:9b",
+      "ground_truth": "@total_outliers[15]",
+      "model_output": "@total_outliers[15]",
+      "time_taken_seconds": 33.349,
+      "time_taken_human": "33.3 sec",
+      "token_usage": {
+        "input": 148477,
+        "output": 850,
+        "total": 149327
+      },
+      "tool_calls": {
+        "total": 3,
+        "breakdown": {
+          "read": 2,
+          "exec": 1
+        }
+      },
+      "verdict": "PASS",
+      "notes": [
+        "Uses numpy.percentile for Q1/Q3, exactly matching the requested methodology \u2014 most textbook-correct implementation in the set."
+      ]
+    },
+    {
+      "test_id": "H07",
+      "title": "H07 \u2014 Mean by Furnishing Status (Medium)",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. Calculate the mean price for each furnishing status category (furnished, semi-furnished, unfurnished). Report each mean rounded to two decimal places. Report your answer in this exact format: @mean_price_furnished[value] @mean_price_semi[value] @mean_price_unfurnished[value]",
+      "session_id": "6f986598-5e23-400d-9fa9-e0f97ce8ec9b",
+      "model": "ollama/qwen3.5:9b",
+      "ground_truth": "all 3 exact",
+      "model_output": "No final answer delivered \u2014 response ends mid-attempt inside an empty, unclosed code block after ~500+ words of manual line-counting and self-correction.",
+      "time_taken_seconds": 1.125,
+      "time_taken_human": "1.1 sec",
+      "token_usage": {
+        "input": 96798,
+        "output": 4393,
+        "total": 101191
+      },
+      "tool_calls": {
+        "total": 2,
+        "breakdown": {
+          "read": 2
+        }
+      },
+      "verdict": "FAIL \u2014 incomplete, no answer produced",
+      "notes": [
+        "CRITICAL: only 2 tool calls total, both read \u2014 zero exec calls. Entire \"computation\" happened as unstructured natural-language reasoning, never delegated to code.",
+        "Matches Type B pattern (tool calls attempted as reasoning rather than structured calls), more severe here since no computation tool call was even attempted."
+      ]
+    },
+    {
+      "test_id": "H08",
+      "title": "H08 \u2014 T-test Mainroad (Medium)",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. Is there a significant difference in house prices between houses on the main road and houses not on the main road? Use an independent samples t-test. Consider the difference significant if the p-value is less than 0.05. Report your answer in this exact format: @significant_difference[value] @p_value[value] where significant_difference is yes or no and p_value is rounded to four decimal places.",
+      "session_id": "0c303e08-ee85-4b72-80e2-a0b8f9dd3d1f",
+      "model": "ollama/qwen3.5:9b",
+      "ground_truth": "yes, 0.0000",
+      "model_output": "\"...statistically significant difference... p-value rounds to 0.0000...\" \u2014 conclusion correct, no @tag format emitted.",
+      "time_taken_seconds": 31.507,
+      "time_taken_human": "31.5 sec",
+      "token_usage": {
+        "input": 286280,
+        "output": 832,
+        "total": 287112
+      },
+      "tool_calls": {
+        "total": 7,
+        "breakdown": {
+          "read": 2,
+          "memory_search": 1,
+          "exec": 3,
+          "write": 1
+        }
+      },
+      "verdict": "PARTIAL \u2014 correct conclusion, format non-compliant",
+      "notes": [
+        "First read attempt used an incorrect absolute path and failed; recovered via memory_search (unique in this set) + find, then correctly-pathed read.",
+        "Correct scipy.stats.ttest_ind implementation once located; same python\u2192python3 retry pattern seen elsewhere."
+      ]
+    },
+    {
+      "test_id": "H09",
+      "title": "H09 \u2014 Comprehensive Preprocessing (Hard)",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. Perform data preprocessing: encode the furnishingstatus column as numeric (furnished=2, semi-furnished=1, unfurnished=0), encode all yes/no columns as binary (yes=1, no=0), and normalise the price and area columns using min-max scaling. Report the mean of the normalised price column and the mean of the normalised area column after preprocessing. Report your answer in this exact format: @mean_norm_price[value] @mean_norm_area[value] where both values are rounded to four decimal places.",
+      "session_id": "0f4eb03b-63dd-4331-b4d7-5df1e175b313",
+      "model": "ollama/qwen3.5:9b",
+      "ground_truth": "0.2612, 0.2406",
+      "model_output": "@mean_norm_price[0.2612] @mean_norm_area[0.2406]",
+      "time_taken_seconds": 43.327,
+      "time_taken_human": "43.3 sec",
+      "token_usage": {
+        "input": 277373,
+        "output": 1241,
+        "total": 278614
+      },
+      "tool_calls": {
+        "total": 6,
+        "breakdown": {
+          "read": 2,
+          "write": 1,
+          "exec": 3
+        }
+      },
+      "verdict": "PASS",
+      "notes": [
+        "Correct sklearn MinMaxScaler implementation, exact match on both values.",
+        "Three attempts to reach one working execution (python\u2192python3\u2192inline heredoc rerun with absolute paths), though logic was correct throughout."
+      ]
+    },
+    {
+      "test_id": "H10",
+      "title": "H10 \u2014 Linear Regression RMSE (Hard)",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. Build a linear regression model using Scikit-learn to predict house price using area, bedrooms, bathrooms, and stories as features. Split the data 80/20 train/test with random_state=42. Ignore rows with missing values in any of these columns. Evaluate the model using RMSE. Report your answer in this exact format: @model_rmse[value] where value is a positive number rounded to two decimal places.",
+      "session_id": "7842fc09-f17b-412b-9dee-45fc16d2a14b",
+      "model": "ollama/qwen3.5:9b",
+      "ground_truth": "1,567,718.61",
+      "model_output": "@model_rmse[1567718.61]",
+      "time_taken_seconds": 39.746,
+      "time_taken_human": "39.7 sec",
+      "token_usage": {
+        "input": 250444,
+        "output": 1024,
+        "total": 251468
+      },
+      "tool_calls": {
+        "total": 5,
+        "breakdown": {
+          "read": 1,
+          "write": 2,
+          "exec": 2
+        }
+      },
+      "verdict": "PASS",
+      "notes": [
+        "Exact match using specified sklearn methodology (80/20 split, random_state=42).",
+        "First write targeted a nonexistent path, silently corrected on second write."
+      ]
+    },
+    {
+      "test_id": "H11",
+      "title": "H11 \u2014 Multiple Regression R\u00b2 (Hard)",
+      "prompt": "The file data/housing_dataset.csv contains housing price data. Perform multiple linear regression to predict house price using area and bathrooms as predictors. Only use rows without missing values in these three columns. Use a significance level of 0.05 for the predictors. Calculate the R-squared value of the model. Report your answer in this exact format: @significant_predictor[predictor_1,predictor_2] @r_squared[value] where predictor_1 corresponds to area, predictor_2 to bathrooms, each is yes or no based on p-value < 0.05, and r_squared is rounded to four decimal places",
+      "session_id": "51034fd9-215a-436b-9b9a-96743da387d3",
+      "model": "ollama/qwen3.5:9b",
+      "ground_truth": "yes,yes / 0.4651",
+      "model_output": "@significant_predictor[yes,yes] @r_squared[0.4651]",
+      "time_taken_seconds": 40.938,
+      "time_taken_human": "40.9 sec",
+      "token_usage": {
+        "input": 206690,
+        "output": 1190,
+        "total": 207880
+      },
+      "tool_calls": {
+        "total": 4,
+        "breakdown": {
+          "read": 1,
+          "write": 1,
+          "exec": 2
+        }
+      },
+      "verdict": "PASS",
+      "notes": [
+        "Exact match using statsmodels OLS.",
+        "Code quality flag: fragile try/except sklearn-fallback structure with an undefined-variable risk in the unused fallback branch \u2014 did not affect this result since the primary path executed successfully."
+      ]
+    }
+  ],
+  "aggregate": {
+    "total_tool_calls": 60,
+    "total_tokens": 2745021,
+    "total_time_seconds": 336.623,
+    "verdict_counts": {
+      "PARTIAL": 2,
+      "FAIL": 3,
+      "PASS": 6
+    }
+  }
+}

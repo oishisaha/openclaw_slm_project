@@ -1,0 +1,37 @@
+[
+  {
+    "timestamp": "2026-07-22T04:26:58.373Z",
+    "tool": "memory_search",
+    "arguments": {
+      "query": "previous inputs questions asked",
+      "corpus": "sessions",
+      "maxResults": 50
+    }
+  },
+  {
+    "timestamp": "2026-07-22T04:26:59.822Z",
+    "tool": "sessions_history",
+    "arguments": {
+      "sessionKey": "current",
+      "limit": 100
+    }
+  },
+  {
+    "timestamp": "2026-07-22T04:27:02.327Z",
+    "tool": "sessions_history",
+    "arguments": {
+      "limit": 100,
+      "offset": 100,
+      "sessionKey": "current"
+    }
+  },
+  {
+    "timestamp": "2026-07-22T04:27:04.409Z",
+    "tool": "sessions_history",
+    "arguments": {
+      "limit": 100,
+      "offset": 0,
+      "sessionKey": "current"
+    }
+  }
+]

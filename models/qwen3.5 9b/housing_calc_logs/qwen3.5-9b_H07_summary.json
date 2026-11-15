@@ -1,0 +1,27 @@
+{
+  "test_id": "H07",
+  "title": "H07 \u2014 Mean by Furnishing Status (Medium)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Calculate the mean price for each furnishing status category (furnished, semi-furnished, unfurnished). Report each mean rounded to two decimal places. Report your answer in this exact format: @mean_price_furnished[value] @mean_price_semi[value] @mean_price_unfurnished[value]",
+  "session_id": "6f986598-5e23-400d-9fa9-e0f97ce8ec9b",
+  "model": "ollama/qwen3.5:9b",
+  "ground_truth": "all 3 exact",
+  "model_output": "No final answer delivered \u2014 response ends mid-attempt inside an empty, unclosed code block after ~500+ words of manual line-counting and self-correction.",
+  "time_taken_seconds": 1.125,
+  "time_taken_human": "1.1 sec",
+  "token_usage": {
+    "input": 96798,
+    "output": 4393,
+    "total": 101191
+  },
+  "tool_calls": {
+    "total": 2,
+    "breakdown": {
+      "read": 2
+    }
+  },
+  "verdict": "FAIL \u2014 incomplete, no answer produced",
+  "notes": [
+    "CRITICAL: only 2 tool calls total, both read \u2014 zero exec calls. Entire \"computation\" happened as unstructured natural-language reasoning, never delegated to code.",
+    "Matches Type B pattern (tool calls attempted as reasoning rather than structured calls), more severe here since no computation tool call was even attempted."
+  ]
+}

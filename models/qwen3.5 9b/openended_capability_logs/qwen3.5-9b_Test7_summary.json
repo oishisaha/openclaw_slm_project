@@ -1,0 +1,32 @@
+{
+  "test_id": "Test7",
+  "title": "Test 7 \u2014 Full ML Workflow",
+  "prompt": "The file data/housing_dataset.csv contains housing market data. Build a machine learning model to predict house prices. Preprocess the categorical variables, split into train/test sets, train a regression model, report evaluation metrics (RMSE and R\u00b2), and rank the most important features. Save your model results to a file called model_results.txt in the workspace.",
+  "session_id": "129441e1-60ef-422c-9edc-870d3f36cedc",
+  "model": "ollama/qwen3.5:9b",
+  "model_output": "No confirmed model_results.txt or working model produced -- session ends mid-loop.",
+  "time_taken_seconds": 930.161,
+  "time_taken_human": "15.5 min",
+  "token_usage": {
+    "input": 5857721,
+    "output": 25171,
+    "total": 5882892,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 114,
+    "breakdown": {
+      "read": 5,
+      "exec": 58,
+      "write": 49,
+      "process": 2
+    }
+  },
+  "verdict": "CRITICAL FAIL -- Type E retry-loop / self-correction spiral, most severe in this set",
+  "notes": [
+    "114 tool calls (58 exec, 49 write, 5 read, 2 process), ~15.5 minutes, 5,882,892 total tokens -- the single most expensive and longest session in this 8-test set.",
+    "Longest, most repetitive transcript of all 8 tests -- dozens of near-identical 'Let me try a completely different approach...' restatements, all citing heredoc truncation as the blocker.",
+    "Model explicitly self-diagnoses the blocker ('the heredoc keeps getting truncated') dozens of times without ever abandoning that approach for a genuinely different one -- same self-diagnosis-without-adaptation pattern seen in H07.",
+    "Uses process (background exec polling) twice -- alongside Test8, the only sessions in this set to do so, consistent with attempting genuine model-training runs rather than pure data exploration."
+  ]
+}

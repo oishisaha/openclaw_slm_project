@@ -1,0 +1,23 @@
+{
+  "test_id": "Test1",
+  "title": "Test1 \u2014 Initial Data Exploration",
+  "prompt": "The file data/housing_dataset.csv contains housing data. Perform an initial data exploration: number of rows and columns, column names, data types, missing values. Summarize your findings.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "180 records, 13 columns, no missing values detected. Correctly typed numeric vs categorical columns, provided full column-by-column table.",
+  "time_taken_seconds": 0.0,
+  "time_taken_human": "0.0 sec",
+  "token_usage": {
+    "input": 69268,
+    "output": 516,
+    "total": 69784,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 1,
+    "breakdown": {
+      "read": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": []
+}

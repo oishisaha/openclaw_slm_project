@@ -1,0 +1,220 @@
+[
+  {
+    "ts": "2026-07-27T05:41:49.092Z",
+    "seq": 5,
+    "input": 789,
+    "output": 443,
+    "cacheRead": 45792,
+    "reasoningTokens": 216,
+    "total": 47024
+  },
+  {
+    "ts": "2026-07-27T05:42:24.807Z",
+    "seq": 5,
+    "input": 528,
+    "output": 251,
+    "cacheRead": 46688,
+    "reasoningTokens": 128,
+    "total": 47467
+  },
+  {
+    "ts": "2026-07-27T05:42:40.344Z",
+    "seq": 5,
+    "input": 811,
+    "output": 821,
+    "cacheRead": 47680,
+    "reasoningTokens": 337,
+    "total": 49312
+  },
+  {
+    "ts": "2026-07-27T05:42:53.115Z",
+    "seq": 5,
+    "input": 1091,
+    "output": 384,
+    "cacheRead": 48320,
+    "total": 49795
+  },
+  {
+    "ts": "2026-07-27T05:43:10.176Z",
+    "seq": 5,
+    "input": 772,
+    "output": 1168,
+    "cacheRead": 50720,
+    "reasoningTokens": 551,
+    "total": 52660
+  },
+  {
+    "ts": "2026-07-27T05:44:11.115Z",
+    "seq": 5,
+    "input": 1887,
+    "output": 1431,
+    "cacheRead": 78240,
+    "reasoningTokens": 524,
+    "total": 81558
+  },
+  {
+    "ts": "2026-07-27T05:44:29.502Z",
+    "seq": 5,
+    "input": 1169,
+    "output": 146,
+    "cacheRead": 25920,
+    "reasoningTokens": 93,
+    "total": 27235
+  },
+  {
+    "ts": "2026-07-27T05:46:12.123Z",
+    "seq": 5,
+    "input": 871,
+    "output": 1160,
+    "cacheRead": 54720,
+    "reasoningTokens": 515,
+    "total": 56751
+  },
+  {
+    "ts": "2026-07-27T05:46:27.606Z",
+    "seq": 5,
+    "input": 1272,
+    "output": 461,
+    "cacheRead": 55488,
+    "total": 57221
+  },
+  {
+    "ts": "2026-07-27T05:46:46.786Z",
+    "seq": 5,
+    "input": 548,
+    "output": 315,
+    "cacheRead": 57440,
+    "total": 58303
+  },
+  {
+    "ts": "2026-07-27T05:47:14.004Z",
+    "seq": 5,
+    "input": 134,
+    "output": 1902,
+    "cacheRead": 29152,
+    "reasoningTokens": 1505,
+    "total": 31188
+  },
+  {
+    "ts": "2026-07-27T05:50:15.594Z",
+    "seq": 5,
+    "input": 8810,
+    "output": 9158,
+    "cacheRead": 240384,
+    "reasoningTokens": 4151,
+    "total": 258352
+  },
+  {
+    "ts": "2026-07-27T05:51:00.632Z",
+    "seq": 5,
+    "input": 6585,
+    "output": 1796,
+    "cacheRead": 208672,
+    "reasoningTokens": 771,
+    "total": 217053
+  },
+  {
+    "ts": "2026-07-27T05:51:26.567Z",
+    "seq": 5,
+    "input": 1924,
+    "output": 1006,
+    "cacheRead": 70624,
+    "reasoningTokens": 328,
+    "total": 73554
+  },
+  {
+    "ts": "2026-07-27T05:51:56.151Z",
+    "seq": 5,
+    "input": 1453,
+    "output": 1818,
+    "cacheRead": 73216,
+    "reasoningTokens": 1019,
+    "total": 76487
+  },
+  {
+    "ts": "2026-07-27T05:53:28.059Z",
+    "seq": 5,
+    "input": 1466,
+    "output": 1597,
+    "cacheRead": 74560,
+    "reasoningTokens": 769,
+    "total": 77623
+  },
+  {
+    "ts": "2026-07-27T05:54:16.636Z",
+    "seq": 5,
+    "input": 1434,
+    "output": 1113,
+    "cacheRead": 76032,
+    "reasoningTokens": 438,
+    "total": 78579
+  },
+  {
+    "ts": "2026-07-27T05:55:00.972Z",
+    "seq": 5,
+    "input": 2225,
+    "output": 1623,
+    "cacheRead": 239232,
+    "reasoningTokens": 319,
+    "total": 243080
+  },
+  {
+    "ts": "2026-07-27T05:55:27.385Z",
+    "seq": 5,
+    "input": 2147,
+    "output": 660,
+    "cacheRead": 79296,
+    "total": 82103
+  },
+  {
+    "ts": "2026-07-27T05:56:14.976Z",
+    "seq": 5,
+    "input": 2436,
+    "output": 2056,
+    "cacheRead": 208448,
+    "reasoningTokens": 408,
+    "total": 212940
+  },
+  {
+    "ts": "2026-07-27T05:57:33.500Z",
+    "seq": 5,
+    "input": 3741,
+    "output": 1423,
+    "cacheRead": 218016,
+    "total": 223180
+  },
+  {
+    "ts": "2026-07-27T05:58:18.256Z",
+    "seq": 5,
+    "input": 1017,
+    "output": 1571,
+    "cacheRead": 90624,
+    "reasoningTokens": 568,
+    "total": 93212
+  },
+  {
+    "ts": "2026-07-27T05:58:38.558Z",
+    "seq": 5,
+    "input": 1797,
+    "output": 853,
+    "cacheRead": 91136,
+    "total": 93786
+  },
+  {
+    "ts": "2026-07-27T05:59:08.478Z",
+    "seq": 5,
+    "input": 1384,
+    "output": 913,
+    "cacheRead": 189792,
+    "total": 192089
+  },
+  {
+    "ts": "2026-07-27T06:00:50.180Z",
+    "seq": 5,
+    "input": 2007,
+    "output": 2981,
+    "cacheRead": 147392,
+    "reasoningTokens": 1236,
+    "total": 152380
+  }
+]

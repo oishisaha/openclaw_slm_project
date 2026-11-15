@@ -1,0 +1,29 @@
+{
+  "test_id": "Test5",
+  "title": "Test 5 \u2014 Categorical Analysis",
+  "prompt": "Analyze whether furnishing status affects housing price. Calculate average prices by furnishing category and explain the results.",
+  "session_id": "a3e566e1-72c9-4878-b59c-6afca18f01b8",
+  "model": "ollama/qwen3.5:9b",
+  "model_output": "Transcript excerpt available cuts off right after the model identifies the relevant columns (price, furnishingstatus) -- no furnishing-status price comparison visible in the captured transcript.",
+  "time_taken_seconds": 140.834,
+  "time_taken_human": "2.3 min",
+  "token_usage": {
+    "input": 271315,
+    "output": 5170,
+    "total": 276485,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 8,
+    "breakdown": {
+      "exec": 2,
+      "read": 1,
+      "write": 5
+    }
+  },
+  "verdict": "UNCLEAR -- needs verification against raw session",
+  "notes": [
+    "Tool log shows 8 calls (5 write, 2 exec, 1 read) -- more activity than a session that stopped at column identification would need, suggesting the session likely proceeded further than the available transcript excerpt shows.",
+    "Recommend checking the raw session transcript directly (not just the paste) before finalizing this verdict -- the extraction data implies more happened than was captured in the provided text."
+  ]
+}

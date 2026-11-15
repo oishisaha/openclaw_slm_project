@@ -1,0 +1,537 @@
+[
+  {
+    "timestamp": "2026-07-17T07:18:16.469Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "wc -l data/german_train_80.csv data/german_val_20.csv",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:18:16.469Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "head -1 data/german_train_80.csv | awk -F',' '{print NF}'",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:18:25.922Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "head -1 data/german_train_80.csv  # show header",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:18:25.922Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "tail -1 data/german_train_80.csv  # show last row",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:18:25.922Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "tail -1 data/german_val_20.csv  # show last row",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:18:32.203Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "wc -l data/german_train_80.csv data/german_val_20.csv && echo \"---\" && awk 'END{print \"train data rows (no header):\", NR-1}' data/german_train_80.csv && awk 'END{print \"val data rows (no header):\", NR-1}' data/german_val_20.csv",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:18:32.203Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "head -1 data/german_train_80.csv | tr ',' '\\n' | nl | tail -5",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:54:14.640Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "awk -F',' 'NR>1{count[$NF]++} END{print \"target_good=0:\", count[0]; print \"target_good=1:\", count[1]}' data/german_train_80.csv data/german_val_20.csv",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:54:42.387Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "head -1 data/german_train_pipelineB.csv | awk -F',' '{print NF}'",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:54:42.387Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "head -1 data/german_train_pipelineB.csv",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:54:42.387Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "head -3 data/german_train_pipelineB.csv",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:54:51.713Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "head -20 data/german_train_pipelineB.csv | awk -F',' 'NR>1{for(i=1;i<=NF;i++) if($i!~/^[0-9.]+$/) cat[i]++} END{for(i=1;i<=NF;i++) if(cat[i]>0) print i\": categorical\"; else print i\": numeric\"}'",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:54:51.713Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "sed -n '2,20p' data/german_train_pipelineB.csv | awk -F',' '{\n  for(i=1;i<=NF;i++) {\n    if($i!~/^[0-9]+(\\.[0-9]+)?$/) seen[i]=1\n  }\n} END {\n  for(i=1;i<=NF;i++) {\n    if(seen[i]) print i\": non-numeric (categorical)\"\n    else print i\": numeric\"\n  }\n}'",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:54:57.958Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "awk -F',' 'NR>1{for(i=1;i<=NF;i++) if($i!~/^[0-9]+(\\.[0-9]+)?$/) cat[i]++} END{for(i=1;i<=NF;i++) if(cat[i]>0) printf \"Col %d (%s): categorical\\n\", i, cat[i]; printf \"\\n\"; for(i=1;i<=NF;i++) if(!cat[i]) printf \"Col %d: numeric\\n\", i}' data/german_train_pipelineB.csv",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:55:42.615Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/ridge_credit.py\nimport numpy as np\nimport pandas as pd\nfrom sklearn.linear_model import Ridge\nfrom sklearn.metrics import mean_squared_error, roc_auc_score\n\n# Load data\ntrain = pd.read_csv('data/german_train_80.csv')\nval = pd.read_csv('data/german_val_20.csv')\n\n# Separate features and target\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good']\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good']\n\nprint(f\"Train shape: {X_train.shape}, Val shape: {X_val.shape}\")\nprint(f\"Train target distribution:\\n{y_train.value_counts().to_dict()}\")\nprint(f\"Val target distribution:\\n{y_val.value_counts().to_dict()}\")\n\n# Train Ridge regression with alpha=1.0\nmodel = Ridge(alpha=1.0, random_state=42)\nmodel.fit(X_train, y_train)\n\n# Raw predictions\npred_train = model.predict(X_train)\npred_val = model.predict(X_val)\n\n# MSE (raw predictions)\ntrain_mse = mean_squared_error(y_train, pred_train)\nval_mse = mean_squared_error(y_val, pred_val)\n\n# AUC requires sigmoid transform\ndef sigmoid(x):\n    return 1 / (1 + np.exp(-x))\n\nprob_train = sigmoid(pred_train)\nprob_val = sigmoid(pred_val)\n\nval_auc = roc_auc_score(y_val, prob_val)\n\nprint(f\"\\n@train_mse[{train_mse:.4f}] @val_mse[{val_mse:.4f}] @val_auc[{val_auc:.4f}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/ridge_credit.py"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:56:48.946Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/logreg_credit.py\nimport numpy as np\nimport pandas as pd\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import log_loss, roc_auc_score\n\n# Load data\ntrain = pd.read_csv('data/german_train_80.csv')\nval = pd.read_csv('data/german_val_20.csv')\n\n# Separate features and target\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good']\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good']\n\n# Train Logistic Regression\nmodel = LogisticRegression(max_iter=2000, solver='liblinear', random_state=42)\nmodel.fit(X_train, y_train)\n\n# Predicted probabilities\nprob_train = model.predict_proba(X_train)[:, 1]\nprob_val = model.predict_proba(X_val)[:, 1]\n\n# Log loss\ntrain_logloss = log_loss(y_train, prob_train)\nval_logloss = log_loss(y_val, prob_val)\n\n# AUC\nval_auc = roc_auc_score(y_val, prob_val)\n\nprint(f\"@train_logloss[{train_logloss:.4f}] @val_logloss[{val_logloss:.4f}] @val_auc[{val_auc:.4f}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/logreg_credit.py"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T07:59:17.616Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/dt_credit.py\nimport numpy as np\nimport pandas as pd\nfrom sklearn.tree import DecisionTreeClassifier, _tree\nfrom sklearn.metrics import roc_auc_score\n\n# Load data\ntrain = pd.read_csv('data/german_train_80.csv')\nval = pd.read_csv('data/german_val_20.csv')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Train Decision Tree\ndt = DecisionTreeClassifier(random_state=42, max_depth=4, min_samples_leaf=20, criterion='gini')\ndt.fit(X_train, y_train)\n\n# --- Training weighted average Gini impurity across leaf nodes ---\n# Use tree structure to get leaf info\ntree = dt.tree_\nn_nodes = tree.node_count\nchildren_left = tree.children_left\nchildren_right = tree.children_right\nis_leaf = (children_left == children_right)  # _tree.TREE_LEAF = -1, both children are -1 for leaf\n\ntotal_weighted_gini = 0.0\ntotal_samples = 0\n\nfor i in range(n_nodes):\n    if is_leaf[i]:\n        # Gini impurity at this node\n        gini = tree.impurity[i]  # this is the Gini impurity at the node\n        n_samples = tree.n_node_samples[i]\n        total_weighted_gini += gini * n_samples\n        total_samples += n_samples\n\ntrain_gini = total_weighted_gini / total_samples\n\n# --- Validation: mean of 2 * p * (1-p) ---\nprob_val = dt.predict_proba(X_val)\n# prob_val[:, 1] is p for class 1, prob_val[:, 0] is p for class 0\n# For a binary classification, Gini = 2*p*(1-p) where p = P(class=1)\np1 = prob_val[:, 1]\nval_gini = np.mean(2 * p1 * (1 - p1))\n\n# --- Validation AUC ---\nval_auc = roc_auc_score(y_val, p1)\n\nprint(f\"@train_gini[{train_gini:.4f}] @val_gini[{val_gini:.4f}] @val_auc[{val_auc:.4f}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/dt_credit.py"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:05:26.489Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/rfr_credit.py\nimport numpy as np\nimport pandas as pd\nfrom sklearn.ensemble import RandomForestRegressor\nfrom sklearn.metrics import mean_squared_error, roc_auc_score\n\n# Load data\ntrain = pd.read_csv('data/german_train_80.csv')\nval = pd.read_csv('data/german_val_20.csv')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good']\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good']\n\n# Train Random Forest Regressor\nrfr = RandomForestRegressor(\n    n_estimators=300,\n    max_depth=None,\n    min_samples_leaf=1,\n    min_samples_split=2,\n    random_state=42\n)\nrfr.fit(X_train, y_train)\n\n# Raw predictions\npred_train = rfr.predict(X_train)\npred_val = rfr.predict(X_val)\n\n# MSE\ntrain_mse = mean_squared_error(y_train, pred_train)\nval_mse = mean_squared_error(y_val, pred_val)\n\n# AUC via sigmoid transform\ndef sigmoid(x):\n    return 1 / (1 + np.exp(-x))\n\nprob_val = sigmoid(pred_val)\nval_auc = roc_auc_score(y_val, prob_val)\n\nprint(f\"@train_mse[{train_mse:.4f}] @val_mse[{val_mse:.4f}] @val_auc[{val_auc:.4f}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/rfr_credit.py"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:06:01.898Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/rfc_credit.py\nimport numpy as np\nimport pandas as pd\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import roc_auc_score\n\ntrain = pd.read_csv('data/german_train_80.csv')\nval = pd.read_csv('data/german_val_20.csv')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good']\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good']\n\nrfc = RandomForestClassifier(\n    n_estimators=300,\n    criterion='gini',\n    max_depth=5,\n    min_samples_leaf=5,\n    min_samples_split=2,\n    random_state=42\n)\nrfc.fit(X_train, y_train)\n\nprob_val = rfc.predict_proba(X_val)[:, 1]\nval_auc = roc_auc_score(y_val, prob_val)\n\nprint(f\"@val_auc[{val_auc:.4f}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/rfc_credit.py"
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:07:09.837Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "python3 -c \"import catboost; print(catboost.__version__)\""
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:07:18.581Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "pip install catboost 2>&1 | tail -5",
+      "timeout": 120
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:07:33.686Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "tender-harbor",
+      "timeout": 120000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:07:49.951Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/cb_credit.py\nimport numpy as np\nimport pandas as pd\nfrom catboost import CatBoostClassifier, Pool\nfrom sklearn.metrics import log_loss, roc_auc_score\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\n# Identify categorical columns (all object/string columns except target)\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\n# Remove target_good from cat_cols if it's there (it's int)\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\nprint(f\"Train shape: {X_train.shape}, Val shape: {X_val.shape}\")\nprint(f\"Categorical columns ({len(cat_cols)}): {cat_cols}\")\n\n# Class weights: weight = total_train / (num_classes * class_count)\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\nprint(f\"Class counts: {class_counts}\")\nprint(f\"Class weights: {class_weights}\")\n\n# Train CatBoost\ncb = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\n\ncb.fit(X_train, y_train, eval_set=(X_val, y_val))\n\n# Predicted probabilities\nprob_train = cb.predict_proba(X_train)[:, 1]\nprob_val = cb.predict_proba(X_val)[:, 1]\n\n# Log loss\ntrain_logloss = log_loss(y_train, prob_train)\nval_logloss = log_loss(y_val, prob_val)\n\n# AUC\nval_auc = roc_auc_score(y_val, prob_val)\n\n# Best iteration info\nbest_iter = cb.get_best_iteration()\nprint(f\"Best iteration: {best_iter}\")\n\nprint(f\"\\n@train_logloss[{train_logloss:.4f}] @val_logloss[{val_logloss:.4f}] @val_auc[{val_auc:.4f}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/cb_credit.py",
+      "timeout": 120
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:08:05.070Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "sharp-coral",
+      "timeout": 120000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:10:13.122Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/cbr_credit.py\nimport numpy as np\nimport pandas as pd\nfrom catboost import CatBoostRegressor, Pool\nfrom sklearn.metrics import mean_squared_error, roc_auc_score\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\n# Categorical columns\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\nprint(f\"Train shape: {X_train.shape}, Val shape: {X_val.shape}\")\nprint(f\"Categorical columns: {cat_cols}\")\n\n# Train CatBoost Regressor\ncbr = CatBoostRegressor(\n    loss_function='RMSE',\n    eval_metric='RMSE',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    cat_features=cat_cols,\n    verbose=False\n)\n\ncbr.fit(X_train, y_train, eval_set=(X_val, y_val))\n\n# Raw predictions\npred_train = cbr.predict(X_train)\npred_val = cbr.predict(X_val)\n\n# Clip to [0, 1]\npred_train_clipped = np.clip(pred_train, 0, 1)\npred_val_clipped = np.clip(pred_val, 0, 1)\n\n# RMSE\ntrain_rmse = np.sqrt(mean_squared_error(y_train, pred_train_clipped))\nval_rmse = np.sqrt(mean_squared_error(y_val, pred_val_clipped))\n\n# AUC (using clipped predictions as probability-like scores)\nval_auc = roc_auc_score(y_val, pred_val_clipped)\n\nbest_iter = cbr.get_best_iteration()\nprint(f\"Best iteration: {best_iter}\")\n\nprint(f\"\\n@train_rmse[{train_rmse:.4f}] @val_rmse[{val_rmse:.4f}] @val_auc[{val_auc:.4f}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/cbr_credit.py",
+      "timeout": 120
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:11:38.308Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/cb_cost.py\nimport numpy as np\nimport pandas as pd\nfrom catboost import CatBoostClassifier\nfrom sklearn.metrics import confusion_matrix\n\n# Load data (Pipeline B)\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\n# Categorical columns\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Class weights: inverse class frequency\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\n# Train CatBoost Classifier (same as C11)\ncb = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\n\ncb.fit(X_train, y_train, eval_set=(X_val, y_val))\n\n# Get validation probabilities\nprob_val = cb.predict_proba(X_val)[:, 1]\n\n# Apply threshold 0.50\npred_val = (prob_val >= 0.50).astype(int)\n\n# Confusion matrix: rows=actual, cols=predicted, order [Good, Bad]\n# Good = 0, Bad = 1\n# [[TN, FP],\n#  [FN, TP]]\ncm = confusion_matrix(y_val, pred_val)\nprint(f\"Confusion matrix:\\n{cm}\")\n\nTN = cm[0, 0]\nFP = cm[0, 1]\nFN = cm[1, 0]\nTP = cm[1, 1]\n\n# Cost-sensitive loss = 5 * FN + 1 * FP\ntotal_cost = 5 * FN + 1 * FP\n\nprint(f\"TN={TN} FP={FP} FN={FN} TP={TP}\")\nprint(f\"Total cost = 5*{FN} + 1*{FP} = {total_cost}\")\n\nprint(f\"\\n@TN[{TN}] @FP[{FP}] @FN[{FN}] @TP[{TP}] @total_cost[{total_cost}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/cb_cost.py",
+      "timeout": 120
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:11:58.917Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "tide-otter",
+      "timeout": 120000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:13:11.760Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/cb_threshold_sweep.py\nimport numpy as np\nimport pandas as pd\nfrom catboost import CatBoostClassifier\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Class weights\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\n# Train CatBoost (same as C11)\ncb = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb.fit(X_train, y_train, eval_set=(X_val, y_val))\n\n# Get validation probabilities\nprob_val = cb.predict_proba(X_val)[:, 1]\n\n# Sweep thresholds\nbest_threshold = None\nmin_cost = float('inf')\n\nfor t in np.arange(0.01, 1.00, 0.01):\n    t = round(t, 2)\n    pred = (prob_val >= t).astype(int)\n    \n    # Confusion matrix elements\n    # actual Good (0), predicted Good (0) -> TN\n    # actual Good (0), predicted Bad (1) -> FP\n    # actual Bad (1), predicted Good (0) -> FN\n    # actual Bad (1), predicted Bad (1) -> TP\n    FP = np.sum((y_val == 0) & (pred == 1))\n    FN = np.sum((y_val == 1) & (pred == 0))\n    \n    cost = 5 * FN + 1 * FP\n    \n    if cost < min_cost:\n        min_cost = cost\n        best_threshold = t\n\nprint(f\"@best_threshold[{best_threshold:.2f}] @min_total_cost[{min_cost}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/cb_threshold_sweep.py",
+      "timeout": 120
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:14:14.567Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/cb_metrics.py\nimport numpy as np\nimport pandas as pd\nfrom catboost import CatBoostClassifier\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Class weights\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\n# Train CatBoost\ncb = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb.fit(X_train, y_train, eval_set=(X_val, y_val))\n\n# Get probabilities\nprob_val = cb.predict_proba(X_val)[:, 1]\n\n# Apply threshold 0.15\nthreshold = 0.15\npred = (prob_val >= threshold).astype(int)\n\n# Confusion matrix\n# actual Good (0), predicted Good (0) -> TN\n# actual Good (0), predicted Bad (1) -> FP\n# actual Bad (1), predicted Good (0) -> FN\n# actual Bad (1), predicted Bad (1) -> TP\nTN = np.sum((y_val == 0) & (pred == 0))\nFP = np.sum((y_val == 0) & (pred == 1))\nFN = np.sum((y_val == 1) & (pred == 0))\nTP = np.sum((y_val == 1) & (pred == 1))\n\nprint(f\"Confusion matrix @ threshold 0.15:\")\nprint(f\"TN={TN} FP={FP} FN={FN} TP={TP}\")\n\n# Metrics\naccuracy = (TP + TN) / (TP + TN + FP + FN)\nsensitivity = TP / (TP + FN)   # Recall for Bad (class 1)\nspecificity = TN / (TN + FP)   # Recall for Good (class 0)\nprecision = TP / (TP + FP) if (TP + FP) > 0 else 0.0\nf1 = 2 * (precision * sensitivity) / (precision + sensitivity) if (precision + sensitivity) > 0 else 0.0\n\nprint(f\"\\n@accuracy[{accuracy:.4f}] @sensitivity[{sensitivity:.4f}] @specificity[{specificity:.4f}] @precision[{precision:.4f}] @f1[{f1:.4f}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/cb_metrics.py",
+      "timeout": 120
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:16:20.641Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/cb_shap.py\nimport numpy as np\nimport pandas as pd\nfrom catboost import CatBoostClassifier, Pool\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Class weights\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\n# Train CatBoost (same as C11)\ncb = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb.fit(X_train, y_train, eval_set=(X_val, y_val))\n\n# Pool for validation\nval_pool = Pool(X_val, y_val, cat_features=cat_cols)\n\n# TreeSHAP values: shape (n_samples, n_features + 1) with last col being baseline\nshap_values = cb.get_feature_importance(val_pool, type='ShapValues')\nprint(f\"SHAP values shape: {shap_values.shape}\")\n\n# Mean absolute SHAP per feature (exclude baseline column)\nfeature_names = X_train.columns.tolist()\nmean_abs_shap = np.mean(np.abs(shap_values[:, :-1]), axis=0)\n\n# Sort by importance descending\nsorted_idx = np.argsort(mean_abs_shap)[::-1]\nfor i, idx in enumerate(sorted_idx):\n    print(f\"Rank {i+1}: {feature_names[idx]} = {mean_abs_shap[idx]:.4f}\")\n\nrank1_feat = feature_names[sorted_idx[0]]\nrank1_val = mean_abs_shap[sorted_idx[0]]\nrank2_feat = feature_names[sorted_idx[1]]\nrank2_val = mean_abs_shap[sorted_idx[1]]\nrank3_feat = feature_names[sorted_idx[2]]\nrank3_val = mean_abs_shap[sorted_idx[2]]\n\nprint(f\"\\n@rank1_feature[{rank1_feat}] @rank1_value[{rank1_val:.2f}] @rank2_feature[{rank2_feat}] @rank2_value[{rank2_val:.2f}] @rank3_feature[{rank3_feat}] @rank3_value[{rank3_val:.2f}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/cb_shap.py",
+      "timeout": 180
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:16:35.713Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "nimble-claw",
+      "timeout": 180000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:17:09.468Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/rfc_sweep.py\nimport numpy as np\nimport pandas as pd\nfrom sklearn.ensemble import RandomForestClassifier\n\n# Load Pipeline A data\ntrain = pd.read_csv('data/german_train_80.csv')\nval = pd.read_csv('data/german_val_20.csv')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Train Random Forest Classifier (same params as C09)\nrfc = RandomForestClassifier(\n    n_estimators=300,\n    criterion='gini',\n    max_depth=5,\n    min_samples_leaf=5,\n    min_samples_split=2,\n    random_state=42\n)\nrfc.fit(X_train, y_train)\n\n# Validation probabilities\nprob_val = rfc.predict_proba(X_val)[:, 1]\n\n# Sweep thresholds 0.01 to 0.99 step 0.01\nbest_threshold = None\nmin_cost = float('inf')\n\nfor t in np.arange(0.01, 1.00, 0.01):\n    t = round(t, 2)\n    pred = (prob_val >= t).astype(int)\n    \n    FP = np.sum((y_val == 0) & (pred == 1))\n    FN = np.sum((y_val == 1) & (pred == 0))\n    \n    cost = 5 * FN + 1 * FP\n    \n    if cost < min_cost:\n        min_cost = cost\n        best_threshold = t\n\nprint(f\"@best_threshold[{best_threshold:.2f}] @min_total_cost[{min_cost}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/rfc_sweep.py",
+      "timeout": 120
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:19:52.130Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_roc.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom catboost import CatBoostClassifier, CatBoostRegressor, Pool\nfrom sklearn.metrics import roc_curve, roc_auc_score\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# === CatBoost Classifier (C11) ===\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\ncb_clf = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb_clf.fit(X_train, y_train, eval_set=(X_val, y_val))\nprob_clf = cb_clf.predict_proba(X_val)[:, 1]\nauc_clf = roc_auc_score(y_val, prob_clf)\n\n# === CatBoost Regressor (C12) ===\ncb_reg = CatBoostRegressor(\n    loss_function='RMSE',\n    eval_metric='RMSE',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb_reg.fit(X_train, y_train, eval_set=(X_val, y_val))\npred_reg = cb_reg.predict(X_val)\nprob_reg = np.clip(pred_reg, 0, 1)\nauc_reg = roc_auc_score(y_val, prob_reg)\n\n# === ROC Curves ===\nfpr_clf, tpr_clf, _ = roc_curve(y_val, prob_clf)\nfpr_reg, tpr_reg, _ = roc_curve(y_val, prob_reg)\n\nplt.figure(figsize=(8, 6))\nplt.plot(fpr_clf, tpr_clf, label=f'CatBoost Logloss (AUC = {auc_clf:.4f})', linewidth=2)\nplt.plot(fpr_reg, tpr_reg, label=f'CatBoost RMSE (AUC = {auc_reg:.4f})', linewidth=2)\nplt.plot([0, 1], [0, 1], 'k--', label='Random classifier', linewidth=1)\n\nplt.xlabel('False Positive Rate')\nplt.ylabel('True Positive Rate')\nplt.title('ROC Curves \u2014 CatBoost Logloss vs RMSE (Validation Set)')\nplt.legend(loc='lower right')\nplt.grid(alpha=0.3)\nplt.tight_layout()\nplt.savefig('roc_curves.png', dpi=150)\nprint(\"Saved roc_curves.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_roc.py",
+      "timeout": 180
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:20:07.834Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "dawn-rook",
+      "timeout": 180000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:21:08.065Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_training_curves.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom catboost import CatBoostClassifier, CatBoostRegressor, Pool\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# === CatBoost Classifier (Logloss) ===\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\ncb_clf = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='Logloss',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=False,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False,\n    custom_metric=['RMSE']\n)\ncb_clf.fit(X_train, y_train, eval_set=(X_val, y_val))\n\nevals_clf = cb_clf.get_evals_result()\ntrain_logloss = evals_clf['learn']['Logloss']\nval_logloss = evals_clf['validation']['Logloss']\n\n# === CatBoost Regressor (RMSE) ===\ncb_reg = CatBoostRegressor(\n    loss_function='RMSE',\n    eval_metric='RMSE',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=False,\n    cat_features=cat_cols,\n    verbose=False,\n    custom_metric=['Logloss']\n)\ncb_reg.fit(X_train, y_train, eval_set=(X_val, y_val))\n\nevals_reg = cb_reg.get_evals_result()\ntrain_rmse = evals_reg['learn']['RMSE']\nval_rmse = evals_reg['validation']['RMSE']\n\n# Plotting\niters = range(1, len(train_logloss) + 1)\nplt.figure(figsize=(10, 6))\n\nplt.plot(iters, train_rmse, label='Train RMSE', linewidth=1, alpha=0.8)\nplt.plot(iters, val_rmse, label='Validation RMSE', linewidth=1, alpha=0.8)\nplt.plot(iters, train_logloss, label='Train Logloss', linewidth=1, alpha=0.8)\nplt.plot(iters, val_logloss, label='Validation Logloss', linewidth=1, alpha=0.8)\n\nplt.xlabel('Iteration')\nplt.ylabel('Metric Value')\nplt.title('Training Curves \u2014 CatBoost Logloss vs RMSE')\nplt.legend()\nplt.grid(alpha=0.3)\nplt.tight_layout()\nplt.savefig('training_curves.png', dpi=150)\nprint(\"Saved training_curves.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_training_curves.py",
+      "timeout": 300
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:21:52.001Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_training_curves.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom catboost import CatBoostClassifier, CatBoostRegressor, Pool\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# === CatBoost Classifier (Logloss) ===\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\ncb_clf = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='Logloss',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=False,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb_clf.fit(X_train, y_train, eval_set=(X_val, y_val))\n\nevals_clf = cb_clf.get_evals_result()\ntrain_logloss = evals_clf['learn']['Logloss']\nval_logloss = evals_clf['validation']['Logloss']\n\n# === CatBoost Regressor (RMSE) ===\ncb_reg = CatBoostRegressor(\n    loss_function='RMSE',\n    eval_metric='RMSE',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=False,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb_reg.fit(X_train, y_train, eval_set=(X_val, y_val))\n\nevals_reg = cb_reg.get_evals_result()\ntrain_rmse = evals_reg['learn']['RMSE']\nval_rmse = evals_reg['validation']['RMSE']\n\n# Plotting\niters = range(1, len(train_logloss) + 1)\nplt.figure(figsize=(10, 6))\n\nplt.plot(iters, train_rmse, label='Train RMSE', linewidth=1, alpha=0.8)\nplt.plot(iters, val_rmse, label='Validation RMSE', linewidth=1, alpha=0.8)\nplt.plot(iters, train_logloss, label='Train Logloss', linewidth=1, alpha=0.8)\nplt.plot(iters, val_logloss, label='Validation Logloss', linewidth=1, alpha=0.8)\n\nplt.xlabel('Iteration')\nplt.ylabel('Metric Value')\nplt.title('Training Curves \u2014 CatBoost Logloss vs RMSE')\nplt.legend()\nplt.grid(alpha=0.3)\nplt.tight_layout()\nplt.savefig('training_curves.png', dpi=150)\nprint(\"Saved training_curves.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_training_curves.py",
+      "timeout": 300
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:22:08.996Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "ember-seaslug",
+      "timeout": 300000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:22:52.862Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "ember-seaslug",
+      "timeout": 300000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:24:42.132Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_prob_hist.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom catboost import CatBoostClassifier, CatBoostRegressor, Pool\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# === CatBoost Classifier (C11) ===\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\ncb_clf = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb_clf.fit(X_train, y_train, eval_set=(X_val, y_val))\nprob_clf = cb_clf.predict_proba(X_val)[:, 1]\n\n# === CatBoost Regressor (C12) ===\ncb_reg = CatBoostRegressor(\n    loss_function='RMSE',\n    eval_metric='RMSE',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb_reg.fit(X_train, y_train, eval_set=(X_val, y_val))\npred_reg = np.clip(cb_reg.predict(X_val), 0, 1)\n\n# === Plot ===\nfig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))\n\nbins = np.linspace(0, 1, 21)\n\n# Logloss model\nax1.hist(prob_clf[y_val == 0], bins=bins, alpha=0.7, label='Good (actual)', color='green', edgecolor='black', linewidth=0.5)\nax1.hist(prob_clf[y_val == 1], bins=bins, alpha=0.7, label='Bad (actual)', color='red', edgecolor='black', linewidth=0.5)\nax1.set_xlabel('Predicted Probability')\nax1.set_ylabel('Count')\nax1.set_title('CatBoost Logloss')\nax1.legend()\nax1.grid(alpha=0.3)\n\n# RMSE model\nax2.hist(pred_reg[y_val == 0], bins=bins, alpha=0.7, label='Good (actual)', color='green', edgecolor='black', linewidth=0.5)\nax2.hist(pred_reg[y_val == 1], bins=bins, alpha=0.7, label='Bad (actual)', color='red', edgecolor='black', linewidth=0.5)\nax2.set_xlabel('Predicted Probability')\nax2.set_ylabel('Count')\nax2.set_title('CatBoost RMSE (clipped)')\nax2.legend()\nax2.grid(alpha=0.3)\n\nplt.tight_layout()\nplt.savefig('predicted_probability_distributions.png', dpi=150)\nprint(\"Saved predicted_probability_distributions.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_prob_hist.py",
+      "timeout": 180
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:24:56.992Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "good-prairie",
+      "timeout": 180000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:25:58.734Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_cost_threshold.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom catboost import CatBoostClassifier, CatBoostRegressor, Pool\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# === CatBoost Classifier (C11) ===\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\ncb_clf = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb_clf.fit(X_train, y_train, eval_set=(X_val, y_val))\nprob_clf = cb_clf.predict_proba(X_val)[:, 1]\n\n# === CatBoost Regressor (C12) ===\ncb_reg = CatBoostRegressor(\n    loss_function='RMSE',\n    eval_metric='RMSE',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb_reg.fit(X_train, y_train, eval_set=(X_val, y_val))\npred_reg = np.clip(cb_reg.predict(X_val), 0, 1)\n\n# === Sweep thresholds ===\nthresholds = np.arange(0.01, 1.00, 0.01)\ncosts_clf = []\ncosts_reg = []\n\nfor t in thresholds:\n    t = round(t, 2)\n    pred_clf = (prob_clf >= t).astype(int)\n    pred_reg = (pred_reg >= t).astype(int)\n    \n    FP_clf = np.sum((y_val == 0) & (pred_clf == 1))\n    FN_clf = np.sum((y_val == 1) & (pred_clf == 0))\n    FP_reg = np.sum((y_val == 0) & (pred_reg == 1))\n    FN_reg = np.sum((y_val == 1) & (pred_reg == 0))\n    \n    cost_clf = 5 * FN_clf + 1 * FP_clf\n    cost_reg = 5 * FN_reg + 1 * FP_reg\n    \n    costs_clf.append(cost_clf)\n    costs_reg.append(cost_reg)\n\n# Average cost per sample (total cost / 200)\navg_costs_clf = np.array(costs_clf) / 200\navg_costs_reg = np.array(costs_reg) / 200\n\n# Find minima\nmin_idx_clf = np.argmin(costs_clf)\nmin_idx_reg = np.argmin(costs_reg)\nmin_thresh_clf = thresholds[min_idx_clf]\nmin_thresh_reg = thresholds[min_idx_reg]\nmin_cost_clf = costs_clf[min_idx_clf]\nmin_cost_reg = costs_reg[min_idx_reg]\n\nprint(f\"Logloss: best_thresh={min_thresh_clf:.2f}, min_cost={min_cost_clf}, avg={min_cost_clf/200:.4f}\")\nprint(f\"RMSE:    best_thresh={min_thresh_reg:.2f}, min_cost={min_cost_reg}, avg={min_cost_reg/200:.4f}\")\n\n# === Plot ===\nplt.figure(figsize=(10, 6))\n\nplt.plot(thresholds, avg_costs_clf, label='CatBoost Logloss', linewidth=2)\nplt.plot(thresholds, avg_costs_reg, label='CatBoost RMSE', linewidth=2)\n\n# Mark minima\nplt.scatter([min_thresh_clf], [min_cost_clf/200], color='tab:blue', s=80, zorder=5, \n            marker='o', edgecolors='black', linewidths=1)\nplt.scatter([min_thresh_reg], [min_cost_reg/200], color='tab:orange', s=80, zorder=5,\n            marker='o', edgecolors='black', linewidths=1)\n\n# Annotations\nplt.annotate(f'Logloss: thr={min_thresh_clf:.2f}, cost={min_cost_clf/200:.3f}',\n             xy=(min_thresh_clf, min_cost_clf/200),\n             xytext=(min_thresh_clf + 0.15, min_cost_clf/200 + 0.02),\n             arrowprops=dict(arrowstyle='->', color='tab:blue'), fontsize=9, color='tab:blue')\nplt.annotate(f'RMSE: thr={min_thresh_reg:.2f}, cost={min_cost_reg/200:.3f}',\n             xy=(min_thresh_reg, min_cost_reg/200),\n             xytext=(min_thresh_reg + 0.15, min_cost_reg/200 + 0.02),\n             arrowprops=dict(arrowstyle='->', color='tab:orange'), fontsize=9, color='tab:orange')\n\nplt.xlabel('Classification Threshold')\nplt.ylabel('Average Cost per Sample')\nplt.title('Cost vs Threshold \u2014 CatBoost Logloss vs RMSE')\nplt.legend()\nplt.grid(alpha=0.3)\nplt.tight_layout()\nplt.savefig('cost_vs_threshold.png', dpi=150)\nprint(\"Saved cost_vs_threshold.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_cost_threshold.py",
+      "timeout": 180
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:26:27.429Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "mild-valley",
+      "timeout": 180000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:26:49.801Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "python3 -c \"import shap; print(shap.__version__)\""
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:26:56.050Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "pip install shap 2>&1 | tail -3",
+      "timeout": 120
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:27:08.701Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_shap_beeswarm.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport shap\nfrom catboost import CatBoostClassifier, Pool\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Class weights\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\n# Train CatBoost (same as C11)\ncb = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb.fit(X_train, y_train, eval_set=(X_val, y_val))\n\n# Get SHAP values using CatBoost's native TreeSHAP\nval_pool = Pool(X_val, y_val, cat_features=cat_cols)\nshap_values = cb.get_feature_importance(val_pool, type='ShapValues')\n\n# shap_values shape: (n_samples, n_features + 1) \u2014 last column is baseline\nshap_vals = shap_values[:, :-1]\nbaseline = shap_values[0, -1]\nfeature_names = X_train.columns.tolist()\n\n# Build shap.Explanation object for beeswarm\nexplanation = shap.Explanation(\n    values=shap_vals,\n    base_values=np.full(len(y_val), baseline),\n    data=X_val.values,\n    feature_names=feature_names\n)\n\n# Beeswarm plot\nplt.figure(figsize=(10, 8))\nshap.plots.beeswarm(explanation, show=False, max_display=20)\nplt.tight_layout()\nplt.savefig('shap_summary_beeswarm.png', dpi=150, bbox_inches='tight')\nprint(\"Saved shap_summary_beeswarm.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_shap_beeswarm.py",
+      "timeout": 180
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:27:29.757Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "pip install shap --upgrade 2>&1 | tail -3",
+      "timeout": 120
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:27:45.272Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_shap_beeswarm.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom catboost import CatBoostClassifier, Pool\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Class weights\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\n# Train CatBoost\ncb = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb.fit(X_train, y_train, eval_set=(X_val, y_val))\n\n# Get SHAP values\nval_pool = Pool(X_val, y_val, cat_features=cat_cols)\nshap_values = cb.get_feature_importance(val_pool, type='ShapValues')\nshap_vals = shap_values[:, :-1]\nfeature_names = X_train.columns.tolist()\n\n# Rank features by mean |SHAP|\nmean_abs_shap = np.mean(np.abs(shap_vals), axis=0)\nsorted_idx = np.argsort(mean_abs_shap)[::-1]\n\n# Reorder features by importance (top at top)\nordered_features = [feature_names[i] for i in sorted_idx]\nordered_shap = shap_vals[:, sorted_idx]\nordered_data = X_val.values[:, sorted_idx]\nordered_ma = mean_abs_shap[sorted_idx]\n\nn_features = len(ordered_features)\nn_samples = len(y_val)\n\n# Create beeswarm plot manually\nfig, ax = plt.subplots(figsize=(10, 8))\n\n# For each feature, plot SHAP values as scatter points\nfor i in range(n_features):\n    y_pos = n_features - 1 - i  # top feature at top\n    shap_vals_i = ordered_shap[:, i]\n    data_vals_i = ordered_data[:, i]\n    feat_name = ordered_features[i]\n    \n    # Normalize data values for coloring\n    vmin = np.min(data_vals_i)\n    vmax = np.max(data_vals_i)\n    if vmax > vmin:\n        norm_data = (data_vals_i - vmin) / (vmax - vmin)\n    else:\n        norm_data = np.zeros_like(data_vals_i)\n    \n    # Add jitter in y\n    np.random.seed(42)\n    y_jitter = np.random.uniform(-0.3, 0.3, n_samples)\n    \n    # Color: high = red, low = blue\n    colors = plt.cm.coolwarm(norm_data)\n    \n    # Scatter with alpha\n    ax.scatter(shap_vals_i, y_pos + y_jitter, c=colors, s=8, alpha=0.6, edgecolors='none', rasterized=True)\n\n# Formatting\nax.set_yticks(range(n_features))\nax.set_yticklabels([ordered_features[n_features - 1 - i] for i in range(n_features)])\nax.set_xlabel('SHAP value (impact on model output)')\nax.set_title('SHAP Beeswarm Summary \u2014 CatBoost Logloss')\n\n# Add colorbar\nsm = plt.cm.ScalarMappable(cmap='coolwarm', norm=plt.Normalize(vmin=0, vmax=1))\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, ticks=[0, 0.5, 1], shrink=0.6)\ncbar.set_ticklabels(['Low', '', 'High'])\ncbar.set_label('Feature value')\n\nax.axvline(x=0, color='gray', linewidth=0.5, linestyle='-')\nax.grid(axis='x', alpha=0.2)\nplt.tight_layout()\nplt.savefig('shap_summary_beeswarm.png', dpi=150, bbox_inches='tight')\nprint(\"Saved shap_summary_beeswarm.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_shap_beeswarm.py",
+      "timeout": 180
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:28:00.939Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "marine-falcon",
+      "timeout": 180000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:28:15.181Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_shap_beeswarm.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom catboost import CatBoostClassifier, Pool\nfrom sklearn.preprocessing import LabelEncoder\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Encode categorical features for display coloring\ndata_encoded = X_val.copy()\nfor col in cat_cols:\n    le = LabelEncoder()\n    le.fit(pd.concat([X_train[col], X_val[col]]).unique())\n    data_encoded[col] = le.transform(data_encoded[col])\n\n# Class weights\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\n# Train CatBoost\ncb = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb.fit(X_train, y_train, eval_set=(X_val, y_val))\n\n# Get SHAP values\nval_pool = Pool(X_val, y_val, cat_features=cat_cols)\nshap_values = cb.get_feature_importance(val_pool, type='ShapValues')\nshap_vals = shap_values[:, :-1]\nfeature_names = X_train.columns.tolist()\n\n# Rank features by mean |SHAP|\nmean_abs_shap = np.mean(np.abs(shap_vals), axis=0)\nsorted_idx = np.argsort(mean_abs_shap)[::-1]\n\n# Reorder\nordered_features = [feature_names[i] for i in sorted_idx]\nordered_shap = shap_vals[:, sorted_idx]\nordered_data = data_encoded.values[:, sorted_idx]\n\nn_features = len(ordered_features)\nn_samples = len(y_val)\n\n# Create beeswarm plot manually\nfig, ax = plt.subplots(figsize=(10, 8))\n\nfor i in range(n_features):\n    y_pos = n_features - 1 - i\n    shap_vals_i = ordered_shap[:, i]\n    data_vals_i = ordered_data[:, i]\n    \n    # Normalize data values for coloring\n    vmin = np.min(data_vals_i)\n    vmax = np.max(data_vals_i)\n    if vmax > vmin:\n        norm_data = (data_vals_i - vmin) / (vmax - vmin)\n    else:\n        norm_data = np.zeros_like(data_vals_i)\n    \n    # Add jitter in y\n    np.random.seed(42)\n    y_jitter = np.random.uniform(-0.3, 0.3, n_samples)\n    \n    # Color: high = red, low = blue\n    colors = plt.cm.coolwarm(norm_data)\n    \n    ax.scatter(shap_vals_i, y_pos + y_jitter, c=colors, s=8, alpha=0.6, edgecolors='none', rasterized=True)\n\n# Formatting\nax.set_yticks(range(n_features))\nax.set_yticklabels([ordered_features[n_features - 1 - i] for i in range(n_features)])\nax.set_xlabel('SHAP value (impact on model output)')\nax.set_title('SHAP Beeswarm Summary \u2014 CatBoost Logloss')\n\n# Colorbar\nsm = plt.cm.ScalarMappable(cmap='coolwarm', norm=plt.Normalize(vmin=0, vmax=1))\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, ticks=[0, 0.5, 1], shrink=0.6)\ncbar.set_ticklabels(['Low', '', 'High'])\ncbar.set_label('Feature value')\n\nax.axvline(x=0, color='gray', linewidth=0.5, linestyle='-')\nax.grid(axis='x', alpha=0.2)\nplt.tight_layout()\nplt.savefig('shap_summary_beeswarm.png', dpi=150, bbox_inches='tight')\nprint(\"Saved shap_summary_beeswarm.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_shap_beeswarm.py",
+      "timeout": 180
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:28:32.383Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "tidal-slug",
+      "timeout": 180000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:29:25.684Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_shap_bar.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom catboost import CatBoostClassifier, Pool\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Class weights\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\n# Train CatBoost\ncb = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb.fit(X_train, y_train, eval_set=(X_val, y_val))\n\n# Get SHAP values\nval_pool = Pool(X_val, y_val, cat_features=cat_cols)\nshap_values = cb.get_feature_importance(val_pool, type='ShapValues')\nshap_vals = shap_values[:, :-1]\nfeature_names = X_train.columns.tolist()\n\n# Mean absolute SHAP\nmean_abs_shap = np.mean(np.abs(shap_vals), axis=0)\nsorted_idx = np.argsort(mean_abs_shap)[::-1]\n\n# Top 9 individually, rest aggregated as \"Sum of 11 other features\"\ntop_n = 9\ntop_indices = sorted_idx[:top_n]\nother_indices = sorted_idx[top_n:]\n\ntop_features = [feature_names[i] for i in top_indices][::-1]  # reverse for horizontal bar\ntop_values = [mean_abs_shap[i] for i in top_indices][::-1]\n\nother_sum = np.sum(mean_abs_shap[other_indices])\n\n# Build the bar data\nall_features = top_features + ['Sum of 11 other features']\nall_values = top_values + [other_sum]\n\n# Plot\nfig, ax = plt.subplots(figsize=(10, 6))\nbars = ax.barh(range(len(all_features)), all_values, color='steelblue', height=0.6)\n\n# Color the aggregate bar differently\nbars[-1].set_color('gray')\n\nax.set_yticks(range(len(all_features)))\nax.set_yticklabels(all_features)\nax.set_xlabel('Mean |SHAP value|')\nax.set_title('SHAP Feature Importance \u2014 CatBoost Logloss')\nax.grid(axis='x', alpha=0.3)\n\n# Add value labels\nfor i, v in enumerate(all_values):\n    ax.text(v + 0.01, i, f'{v:.2f}', va='center', fontsize=9)\n\nplt.tight_layout()\nplt.savefig('shap_importance_bar.png', dpi=150, bbox_inches='tight')\nprint(\"Saved shap_importance_bar.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_shap_bar.py",
+      "timeout": 180
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:29:41.172Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "glow-glade",
+      "timeout": 180000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:30:33.097Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_shap_local.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom catboost import CatBoostClassifier, Pool\n\n# Load data\ntrain = pd.read_csv('data/german_train_pipelineB.csv')\nval = pd.read_csv('data/german_val_pipelineB.csv')\n\ncat_cols = train.select_dtypes(include=['object']).columns.tolist()\nif 'target_good' in cat_cols:\n    cat_cols.remove('target_good')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Class weights\nnum_classes = 2\ntotal_train = len(y_train)\nclass_counts = np.bincount(y_train)\nclass_weights = {i: total_train / (num_classes * count) for i, count in enumerate(class_counts)}\n\n# Train CatBoost\ncb = CatBoostClassifier(\n    loss_function='Logloss',\n    eval_metric='AUC',\n    iterations=1000,\n    learning_rate=0.05,\n    depth=6,\n    random_seed=42,\n    use_best_model=True,\n    class_weights=class_weights,\n    cat_features=cat_cols,\n    verbose=False\n)\ncb.fit(X_train, y_train, eval_set=(X_val, y_val))\n\n# Get predictions at default threshold (0.50)\nprob_val = cb.predict_proba(X_val)[:, 1]\npred_val = (prob_val >= 0.50).astype(int)\n\n# Find the 4th FN case (index 4, 0-indexed)\nfn_indices = np.where((y_val == 1) & (pred_val == 0))[0]\nprint(f\"Total FN cases: {len(fn_indices)}\")\nprint(f\"FN indices: {fn_indices}\")\nprint(f\"4th FN (index 4): {fn_indices[4]}\")\n\nrecord_idx = fn_indices[4]  # The 5th FN (0-indexed: index 4)\nprint(f\"\\nRecord at index {record_idx}:\")\nprint(f\"  Actual: {y_val[record_idx]}\")\nprint(f\"  Predicted prob: {prob_val[record_idx]:.4f}\")\nprint(f\"  Predicted class: {pred_val[record_idx]}\")\nprint(f\"  Feature values:\")\nfor col in X_val.columns:\n    print(f\"    {col}: {X_val.iloc[record_idx][col]}\")\n\n# Get SHAP values for this record\nval_pool = Pool(X_val, y_val, cat_features=cat_cols)\nshap_values = cb.get_feature_importance(val_pool, type='ShapValues')\nshap_vals = shap_values[:, :-1]\nbaseline = shap_values[0, -1]\nfeature_names = X_train.columns.tolist()\n\n# SHAP for this record\nrecord_shap = shap_vals[record_idx]\nrecord_data = X_val.iloc[record_idx].values\nf_x = baseline + np.sum(record_shap)\nprint(f\"\\nBaseline (expected output): {baseline:.4f}\")\nprint(f\"Sum of SHAP contributions: {np.sum(record_shap):.4f}\")\nprint(f\"f(x) = {f_x:.4f}\")\n\n# Sort by absolute SHAP contribution for display\norder = np.argsort(np.abs(record_shap))[::-1]\n\n# Waterfall plot\nfig, ax = plt.subplots(figsize=(10, 7))\n\n# Top 15 features, aggregate the rest\ntop_k = 15\ntop_order = order[:top_k]\nother_order = order[top_k:]\n\n# Build waterfall\nshap_contribs = record_shap[top_order]\nother_sum = np.sum(record_shap[other_order])\n\n# Cumulative from bottom\nvalues = [baseline]\ncumulative = baseline\nlabels = ['Base value']\n\nfor i, idx in enumerate(top_order):\n    cumulative += shap_contribs[i]\n    values.append(cumulative)\n    feat_name = feature_names[idx]\n    val = record_data[idx]\n    contrib = shap_contribs[i]\n    if isinstance(val, bytes):\n        val = val.decode('utf-8')\n    labels.append(f'{feat_name} = {val}')\n\n# Add \"other features\" if any\nif len(other_order) > 0:\n    cumulative += other_sum\n    values.append(cumulative)\n    labels.append(f'Sum of {len(other_order)} other features')\n\n# Plot waterfall\nbar_colors = []\nfor i in range(1, len(values)):\n    diff = values[i] - values[i-1]\n    if diff >= 0:\n        bar_colors.append('#d62728')  # red for positive\n    else:\n        bar_colors.append('#2ca02c')  # green for negative\n\n# Build the waterfall\nx_pos = range(len(values))\nrunning_total = [baseline]\nfor i in range(1, len(values)):\n    running_total.append(values[i])\n\n# Plot bars showing the deltas\nfor i in range(1, len(values)):\n    delta = values[i] - values[i-1]\n    bottom = min(values[i-1], values[i])\n    height = abs(delta)\n    ax.bar(i, height, bottom=bottom, color=bar_colors[i-1], width=0.6, edgecolor='white', linewidth=0.5)\n\n# Connect line\nax.plot(range(len(values)), values, 'ko-', markersize=4, linewidth=1, color='gray')\n\n# Labels\nax.set_xticks(range(len(values)))\nax.set_xticklabels(labels, rotation=45, ha='right', fontsize=8)\nax.set_ylabel('Model output (log-odds)')\nax.set_title(f'SHAP Waterfall \u2014 Record {record_idx} (Actual: Bad, Predicted: Good at 0.50)')\n\n# Add value labels\nfor i, v in enumerate(values):\n    ax.text(i, v, f'{v:.3f}', ha='center', va='bottom' if v >= 0 else 'top', fontsize=8)\n\nax.axhline(y=0, color='gray', linewidth=0.5, linestyle='--')\nax.grid(axis='y', alpha=0.2)\nplt.tight_layout()\nplt.savefig('shap_local_record4.png', dpi=150, bbox_inches='tight')\nprint(\"\\nSaved shap_local_record4.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_shap_local.py",
+      "timeout": 180
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:30:49.210Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "tidy-cove",
+      "timeout": 180000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:32:28.175Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_rf_cost.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nfrom sklearn.ensemble import RandomForestClassifier\n\n# Load Pipeline A data\ntrain = pd.read_csv('data/german_train_80.csv')\nval = pd.read_csv('data/german_val_20.csv')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\n\n# Train Random Forest Classifier (C09 params)\nrfc = RandomForestClassifier(\n    n_estimators=300,\n    criterion='gini',\n    max_depth=5,\n    min_samples_leaf=5,\n    min_samples_split=2,\n    random_state=42\n)\nrfc.fit(X_train, y_train)\n\n# Validation probabilities\nprob_val = rfc.predict_proba(X_val)[:, 1]\n\n# Sweep thresholds\nthresholds = np.arange(0.01, 1.00, 0.01)\ncosts = []\n\nfor t in thresholds:\n    t = round(t, 2)\n    pred = (prob_val >= t).astype(int)\n    FP = np.sum((y_val == 0) & (pred == 1))\n    FN = np.sum((y_val == 1) & (pred == 0))\n    cost = 5 * FN + 1 * FP\n    costs.append(cost)\n\ncosts = np.array(costs)\nmin_idx = np.argmin(costs)\nbest_thresh = thresholds[min_idx]\nmin_cost = costs[min_idx]\n\nprint(f\"Best threshold: {best_thresh:.2f}, Min cost: {min_cost}\")\n\n# Plot\nplt.figure(figsize=(10, 6))\nplt.plot(thresholds, costs, label='RF Classifier', linewidth=2, color='tab:blue')\nplt.scatter([best_thresh], [min_cost], color='tab:red', s=80, zorder=5,\n            marker='o', edgecolors='black', linewidths=1)\nplt.annotate(f'Threshold={best_thresh:.2f}, Cost={min_cost}',\n             xy=(best_thresh, min_cost),\n             xytext=(best_thresh + 0.15, min_cost + 5),\n             arrowprops=dict(arrowstyle='->', color='tab:red'), fontsize=9, color='tab:red')\nplt.xlabel('Threshold')\nplt.ylabel('Total Cost (5\u00d7FN + 1\u00d7FP)')\nplt.title('RF Classifier \u2014 Cost vs Threshold')\nplt.legend()\nplt.grid(alpha=0.3)\nplt.tight_layout()\nplt.savefig('rf_cost_vs_threshold.png', dpi=150)\nprint(\"Saved rf_cost_vs_threshold.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_rf_cost.py",
+      "timeout": 120
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:34:32.075Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "python3 -c \"\nimport shap\nprint(shap.__version__)\n# Try using TreeExplainer\nfrom sklearn.ensemble import RandomForestClassifier\nimport numpy as np\nimport pandas as pd\ntrain = pd.read_csv('data/german_train_80.csv')\nX_train = train.drop(columns=['target_good']).values[:10]\ny_train = train['target_good'].values[:10]\nrf = RandomForestClassifier(n_estimators=10, max_depth=3, random_state=42)\nrf.fit(X_train, y_train)\ne = shap.TreeExplainer(rf)\nsv = e.shap_values(X_train[:3])\nprint('shap values shape:', sv[1].shape if isinstance(sv, list) else sv.shape)\nprint('OK')\n\" 2>&1",
+      "timeout": 60
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:34:59.167Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "pip install numba --upgrade 2>&1 | tail -5",
+      "timeout": 60
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:35:15.400Z",
+    "tool": "process",
+    "arguments": {
+      "action": "poll",
+      "sessionId": "rapid-bloom",
+      "timeout": 120000
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:35:36.717Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "python3 -c \"\nimport shap\nprint(shap.__version__)\nfrom sklearn.ensemble import RandomForestClassifier\nimport numpy as np\nimport pandas as pd\ntrain = pd.read_csv('data/german_train_80.csv')\nX_train = train.drop(columns=['target_good']).values[:10]\ny_train = train['target_good'].values[:10]\nrf = RandomForestClassifier(n_estimators=10, max_depth=3, random_state=42)\nrf.fit(X_train, y_train)\ne = shap.TreeExplainer(rf)\nsv = e.shap_values(X_train[:3])\nprint('shap values shape:', sv[1].shape if isinstance(sv, list) else sv.shape)\nprint('OK')\n\" 2>&1",
+      "timeout": 60
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:35:54.370Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_rf_shap.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport shap\nfrom sklearn.ensemble import RandomForestClassifier\n\n# Load Pipeline A data\ntrain = pd.read_csv('data/german_train_80.csv')\nval = pd.read_csv('data/german_val_20.csv')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\nfeature_names = X_train.columns.tolist()\n\n# Train Random Forest Classifier (C09 params)\nrfc = RandomForestClassifier(\n    n_estimators=300,\n    criterion='gini',\n    max_depth=5,\n    min_samples_leaf=5,\n    min_samples_split=2,\n    random_state=42\n)\nrfc.fit(X_train, y_train)\nprint(\"RF trained\")\n\n# TreeSHAP\nexplainer = shap.TreeExplainer(rfc)\nshap_values_all = explainer.shap_values(X_val)\n# shap_values_all is a list: [class0 SHAP, class1 SHAP]\n# We want class 1 (Bad)\nshap_vals = shap_values_all[1]\nprint(f\"SHAP values shape: {shap_vals.shape}\")\n\n# ===== (a) Beeswarm =====\nexplanation = shap.Explanation(\n    values=shap_vals,\n    base_values=np.full(len(y_val), explainer.expected_value[1]),\n    data=X_val.values,\n    feature_names=feature_names\n)\n\nplt.figure(figsize=(10, 8))\nshap.plots.beeswarm(explanation, show=False, max_display=20)\nplt.title('SHAP Beeswarm Summary \u2014 Random Forest (Class 1: Bad)', fontsize=12)\nplt.tight_layout()\nplt.savefig('rf_shap_summary.png', dpi=150, bbox_inches='tight')\nprint(\"Saved rf_shap_summary.png\")\n\n# ===== (b) Horizontal bar chart, top 15 + others =====\nmean_abs_shap = np.mean(np.abs(shap_vals), axis=0)\nsorted_idx = np.argsort(mean_abs_shap)[::-1]\n\ntop_n = 15\ntop_indices = sorted_idx[:top_n]\nother_indices = sorted_idx[top_n:]\n\ntop_features = [feature_names[i] for i in top_indices][::-1]\ntop_values = [mean_abs_shap[i] for i in top_indices][::-1]\nother_sum = np.sum(mean_abs_shap[other_indices])\n\nall_features = top_features + [f'Sum of {len(other_indices)} other features']\nall_values = top_values + [other_sum]\nn_features = len(all_features)\n\nfig, ax = plt.subplots(figsize=(10, 7))\nbars = ax.barh(range(n_features), all_values, height=0.6)\nbars[-1].set_color('gray')\n\nfor i in range(n_features - 1):\n    bars[i].set_color('steelblue')\n\nax.set_yticks(range(n_features))\nax.set_yticklabels(all_features, fontsize=8)\nax.set_xlabel('Mean |SHAP value|')\nax.set_title('SHAP Feature Importance \u2014 Random Forest Classifier (Class 1: Bad)', fontsize=11)\nax.grid(axis='x', alpha=0.3)\n\nfor i, v in enumerate(all_values):\n    ax.text(v + 0.001, i, f'{v:.3f}', va='center', fontsize=8)\n\nplt.tight_layout()\nplt.savefig('rf_shap_bar.png', dpi=150, bbox_inches='tight')\nprint(\"Saved rf_shap_bar.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_rf_shap.py",
+      "timeout": 300
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:36:14.123Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_rf_shap.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport shap\nfrom sklearn.ensemble import RandomForestClassifier\n\n# Load Pipeline A data\ntrain = pd.read_csv('data/german_train_80.csv')\nval = pd.read_csv('data/german_val_20.csv')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\nfeature_names = X_train.columns.tolist()\n\n# Train Random Forest Classifier (C09 params)\nrfc = RandomForestClassifier(\n    n_estimators=300,\n    criterion='gini',\n    max_depth=5,\n    min_samples_leaf=5,\n    min_samples_split=2,\n    random_state=42\n)\nrfc.fit(X_train, y_train)\nprint(\"RF trained\")\n\n# TreeSHAP\nexplainer = shap.TreeExplainer(rfc)\nshap_values_all = explainer.shap_values(X_val)\nprint(f\"Type: {type(shap_values_all)}\")\nif isinstance(shap_values_all, list):\n    print(f\"List length: {len(shap_values_all)}\")\n    for i, sv in enumerate(shap_values_all):\n        print(f\"  [{i}] shape: {sv.shape}\")\n    shap_vals = shap_values_all[1]\nelse:\n    print(f\"Shape: {shap_values_all.shape}\")\n    shap_vals = shap_values_all\n\nprint(f\"Using shap_vals shape: {shap_vals.shape}\")\n\n# expected_value\nev = explainer.expected_value\nprint(f\"expected_value: {ev}\")\n\n# ===== (a) Beeswarm =====\nexplanation = shap.Explanation(\n    values=shap_vals,\n    base_values=np.full(len(X_val), ev[1] if isinstance(ev, (list, np.ndarray)) and hasattr(ev, '__len__') and not isinstance(ev, float) else ev),\n    data=X_val.values,\n    feature_names=feature_names\n)\n\nplt.figure(figsize=(10, 8))\nshap.plots.beeswarm(explanation, show=False, max_display=20)\nplt.title('SHAP Beeswarm Summary \u2014 Random Forest (Class 1: Bad)', fontsize=12)\nplt.tight_layout()\nplt.savefig('rf_shap_summary.png', dpi=150, bbox_inches='tight')\nprint(\"Saved rf_shap_summary.png\")\n\n# ===== (b) Horizontal bar chart, top 15 + others =====\nmean_abs_shap = np.mean(np.abs(shap_vals), axis=0)\nsorted_idx = np.argsort(mean_abs_shap)[::-1]\n\ntop_n = 15\ntop_indices = sorted_idx[:top_n]\nother_indices = sorted_idx[top_n:]\n\ntop_features = [feature_names[i] for i in top_indices][::-1]\ntop_values = [mean_abs_shap[i] for i in top_indices][::-1]\nother_sum = np.sum(mean_abs_shap[other_indices])\n\nall_features = top_features + [f'Sum of {len(other_indices)} other features']\nall_values = top_values + [other_sum]\nn_features = len(all_features)\n\nfig, ax = plt.subplots(figsize=(10, 7))\nbars = ax.barh(range(n_features), all_values, height=0.6)\nbars[-1].set_color('gray')\nfor i in range(n_features - 1):\n    bars[i].set_color('steelblue')\n\nax.set_yticks(range(n_features))\nax.set_yticklabels(all_features, fontsize=8)\nax.set_xlabel('Mean |SHAP value|')\nax.set_title('SHAP Feature Importance \u2014 Random Forest Classifier (Class 1: Bad)', fontsize=11)\nax.grid(axis='x', alpha=0.3)\n\nfor i, v in enumerate(all_values):\n    ax.text(v + 0.001, i, f'{v:.3f}', va='center', fontsize=8)\n\nplt.tight_layout()\nplt.savefig('rf_shap_bar.png', dpi=150, bbox_inches='tight')\nprint(\"Saved rf_shap_bar.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_rf_shap.py",
+      "timeout": 300
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:36:24.748Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/plot_rf_shap.py\nimport numpy as np\nimport pandas as pd\nimport matplotlib\nmatplotlib.use('Agg')\nimport matplotlib.pyplot as plt\nimport shap\nfrom sklearn.ensemble import RandomForestClassifier\n\n# Load Pipeline A data\ntrain = pd.read_csv('data/german_train_80.csv')\nval = pd.read_csv('data/german_val_20.csv')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good'].values\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good'].values\nfeature_names = X_train.columns.tolist()\n\n# Train Random Forest Classifier (C09 params)\nrfc = RandomForestClassifier(\n    n_estimators=300,\n    criterion='gini',\n    max_depth=5,\n    min_samples_leaf=5,\n    min_samples_split=2,\n    random_state=42\n)\nrfc.fit(X_train, y_train)\nprint(\"RF trained\")\n\n# TreeSHAP\nexplainer = shap.TreeExplainer(rfc)\nsv_all = explainer.shap_values(X_val)\n# sv_all shape: (200, 48, 2) \u2014 take class 1 (Bad)\nshap_vals = sv_all[:, :, 1]\nprint(f\"shap_vals shape: {shap_vals.shape}\")\n\n# Expected value for class 1\nev = explainer.expected_value  # [class0, class1]\nprint(f\"expected_value: {ev}\")\nbaseline_val = ev[1] if isinstance(ev, (list, np.ndarray)) else ev\n\n# ===== (a) Beeswarm =====\nexplanation = shap.Explanation(\n    values=shap_vals,\n    base_values=np.full(len(X_val), baseline_val),\n    data=X_val.values,\n    feature_names=feature_names\n)\n\nplt.figure(figsize=(10, 8))\nshap.plots.beeswarm(explanation, show=False, max_display=20)\nplt.title('SHAP Beeswarm Summary \u2014 Random Forest (Class 1: Bad)', fontsize=12)\nplt.tight_layout()\nplt.savefig('rf_shap_summary.png', dpi=150, bbox_inches='tight')\nprint(\"Saved rf_shap_summary.png\")\n\n# ===== (b) Horizontal bar chart, top 15 + others =====\nmean_abs_shap = np.mean(np.abs(shap_vals), axis=0)\nsorted_idx = np.argsort(mean_abs_shap)[::-1]\n\ntop_n = 15\ntop_indices = sorted_idx[:top_n]\nother_indices = sorted_idx[top_n:]\n\ntop_features = [feature_names[i] for i in top_indices][::-1]\ntop_values = [mean_abs_shap[i] for i in top_indices][::-1]\nother_sum = np.sum(mean_abs_shap[other_indices])\n\nall_features = top_features + [f'Sum of {len(other_indices)} other features']\nall_values = top_values + [other_sum]\nn_features = len(all_features)\n\nfig, ax = plt.subplots(figsize=(10, 7))\nbars = ax.barh(range(n_features), all_values, height=0.6)\nbars[-1].set_color('gray')\nfor i in range(n_features - 1):\n    bars[i].set_color('steelblue')\n\nax.set_yticks(range(n_features))\nax.set_yticklabels(all_features, fontsize=8)\nax.set_xlabel('Mean |SHAP value|')\nax.set_title('SHAP Feature Importance \u2014 Random Forest Classifier (Class 1: Bad)', fontsize=11)\nax.grid(axis='x', alpha=0.3)\n\nfor i, v in enumerate(all_values):\n    ax.text(v + 0.001, i, f'{v:.3f}', va='center', fontsize=8)\n\nplt.tight_layout()\nplt.savefig('rf_shap_bar.png', dpi=150, bbox_inches='tight')\nprint(\"Saved rf_shap_bar.png\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/plot_rf_shap.py",
+      "timeout": 300
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:39:03.372Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "python3 -c \"from pptx import Presentation; print('ok')\" 2>&1 || pip install python-pptx 2>&1 | tail -3",
+      "timeout": 30
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:39:55.191Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/build_deck.py\nfrom pptx import Presentation\nfrom pptx.util import Inches, Pt, Emu\nfrom pptx.dml.color import RGBColor\nfrom pptx.enum.text import PP_ALIGN, MSO_ANCHOR\nfrom pptx.enum.chart import XL_CHART_TYPE\nimport os\n\nprs = Presentation()\nprs.slide_width = Inches(13.333)\nprs.slide_height = Inches(7.5)\n\n# Color scheme\nDARK_BLUE = RGBColor(0x1B, 0x3A, 0x5C)\nMED_BLUE = RGBColor(0x2E, 0x6B, 0x9E)\nLIGHT_BLUE = RGBColor(0xD6, 0xE8, 0xF7)\nACCENT_GREEN = RGBColor(0x27, 0xAE, 0x60)\nACCENT_RED = RGBColor(0xC0, 0x39, 0x2B)\nACCENT_ORANGE = RGBColor(0xE6, 0x7E, 0x22)\nWHITE = RGBColor(0xFF, 0xFF, 0xFF)\nBLACK = RGBColor(0x33, 0x33, 0x33)\nGRAY = RGBColor(0x66, 0x66, 0x66)\n\ndef add_slide(title_text, subtitle_text=None):\n    slide = prs.slides.add_slide(prs.slide_layouts[6])  # blank\n    bg = slide.background\n    fill = bg.fill\n    fill.solid()\n    fill.fore_color.rgb = WHITE\n    \n    # Top bar\n    from pptx.util import Emu\n    shape = slide.shapes.add_shape(1, Emu(0), Emu(0), prs.slide_width, Emu(720000))  # rectangle\n    shape.fill.solid()\n    shape.fill.fore_color.rgb = DARK_BLUE\n    shape.line.fill.background()\n    \n    # Title\n    txBox = slide.shapes.add_textbox(Emu(457200), Emu(91440), Emu(11500000), Emu(550000))\n    tf = txBox.text_frame\n    tf.word_wrap = True\n    p = tf.paragraphs[0]\n    p.text = title_text\n    p.font.size = Pt(28)\n    p.font.bold = True\n    p.font.color.rgb = WHITE\n    \n    # Subtitle\n    if subtitle_text:\n        txBox2 = slide.shapes.add_textbox(Emu(457200), Emu(480000), Emu(11500000), Emu(400000))\n        tf2 = txBox2.text_frame\n        tf2.word_wrap = True\n        p2 = tf2.paragraphs[0]\n        p2.text = subtitle_text\n        p2.font.size = Pt(16)\n        p2.font.color.rgb = RGBColor(0xBB, 0xCC, 0xDD)\n    \n    return slide\n\ndef add_textbox(slide, left, top, width, height, text, font_size=14, bold=False, color=BLACK, alignment=PP_ALIGN.LEFT):\n    txBox = slide.shapes.add_textbox(Emu(left), Emu(top), Emu(width), Emu(height))\n    tf = txBox.text_frame\n    tf.word_wrap = True\n    p = tf.paragraphs[0]\n    p.text = text\n    p.font.size = Pt(font_size)\n    p.font.bold = bold\n    p.font.color.rgb = color\n    p.alignment = alignment\n    return txBox\n\ndef add_bullet_box(slide, left, top, width, height, items, font_size=13, color=BLACK):\n    txBox = slide.shapes.add_textbox(Emu(left), Emu(top), Emu(width), Emu(height))\n    tf = txBox.text_frame\n    tf.word_wrap = True\n    for i, item in enumerate(items):\n        if i == 0:\n            p = tf.paragraphs[0]\n        else:\n            p = tf.add_paragraph()\n        p.text = item\n        p.font.size = Pt(font_size)\n        p.font.color.rgb = color\n        p.space_after = Pt(4)\n        p.level = 0\n    return txBox\n\ndef add_table(slide, left, top, width, height, headers, rows, col_widths=None):\n    n_rows = len(rows) + 1\n    n_cols = len(headers)\n    table_shape = slide.shapes.add_table(n_rows, n_cols, Emu(left), Emu(top), Emu(width), Emu(height))\n    table = table_shape.table\n    \n    if col_widths:\n        for i, w in enumerate(col_widths):\n            table.columns[i].width = Emu(w)\n    \n    # Header row\n    for i, h in enumerate(headers):\n        cell = table.cell(0, i)\n        cell.text = h\n        cell.fill.solid()\n        cell.fill.fore_color.rgb = DARK_BLUE\n        for p in cell.text_frame.paragraphs:\n            p.font.size = Pt(12)\n            p.font.bold = True\n            p.font.color.rgb = WHITE\n            p.alignment = PP_ALIGN.CENTER\n        cell.vertical_anchor = MSO_ANCHOR.MIDDLE\n    \n    # Data rows\n    for r_idx, row_data in enumerate(rows):\n        for c_idx, val in enumerate(row_data):\n            cell = table.cell(r_idx + 1, c_idx)\n            cell.text = str(val)\n            if r_idx % 2 == 0:\n                cell.fill.solid()\n                cell.fill.fore_color.rgb = LIGHT_BLUE\n            for p in cell.text_frame.paragraphs:\n                p.font.size = Pt(11)\n                p.font.color.rgb = BLACK\n                p.alignment = PP_ALIGN.CENTER\n            cell.vertical_anchor = MSO_ANCHOR.MIDDLE\n    \n    return table_shape\n\n# ==================== SLIDE 1: TITLE ====================\nslide = add_slide(\"German Credit Risk Analysis\", \"Executive Summary \u2014 Model Evaluation & Optimisation\")\nadd_textbox(slide, 457200, 1500000, 11500000, 500000,\n    \"Automated credit risk assessment using machine learning on the German Credit dataset\",\n    font_size=18, color=GRAY)\nadd_textbox(slide, 457200, 2200000, 11500000, 400000,\n    \"Objective: Identify the best-performing model for classifying loan applicants as Good (non-default) or Bad (default), \"\n    \"optimise the decision threshold for asymmetric cost (5\u00d7 false negatives + 1\u00d7 false positives), and provide \"\n    \"interpretable insights for business stakeholders.\",\n    font_size=14, color=GRAY)\nadd_textbox(slide, 457200, 5000000, 6000000, 400000,\n    \"Cawcaw Data Analysis | July 2026\", font_size=14, color=GRAY)\n\n# ==================== SLIDE 2: DATASET OVERVIEW ====================\nslide = add_slide(\"Dataset Overview\", \"German Credit \u2014 Two Pipeline Variants\")\nadd_textbox(slide, 457200, 900000, 5500000, 400000,\n    \"Pipeline A (One-Hot Encoded)\", font_size=18, bold=True, color=DARK_BLUE)\nadd_bullet_box(slide, 457200, 1350000, 5500000, 2200000, [\n    \"\u2022 1,000 records split 80/20: train=800, validation=200\",\n    \"\u2022 48 one-hot dummy features + target = 49 columns\",\n    \"\u2022 All categoricals one-hot encoded \u2192 no ordinal assumptions\",\n    \"\u2022 Suitable for linear models (Ridge, Logistic Regression) and tree ensembles (RF)\",\n    \"\u2022 Target: 70% Good (0), 30% Bad (1)\"\n], font_size=13)\n\nadd_textbox(slide, 6800000, 900000, 5500000, 400000,\n    \"Pipeline B (Raw Categorical)\", font_size=18, bold=True, color=DARK_BLUE)\nadd_bullet_box(slide, 6800000, 1350000, 5500000, 2200000, [\n    \"\u2022 Same 1,000 records, identical 80/20 split\",\n    \"\u2022 20 raw features (13 categorical, 7 numeric) + target = 21 columns\",\n    \"\u2022 Categoricals stored as strings \u2014 handled natively by CatBoost\",\n    \"\u2022 No one-hot expansion \u2192 preserves feature interpretability\",\n    \"\u2022 Target: 70% Good (0), 30% Bad (1)\"\n], font_size=13)\n\nadd_textbox(slide, 457200, 3800000, 11500000, 400000,\n    \"Target Distribution (Combined)\", font_size=16, bold=True, color=DARK_BLUE)\nadd_textbox(slide, 457200, 4200000, 11000000, 300000,\n    \"Good (target_good = 0) \u2014 700 records (70%)        Bad (target_good = 1) \u2014 300 records (30%)\",\n    font_size=14, color=BLACK)\n\nadd_textbox(slide, 457200, 4800000, 11500000, 400000,\n    \"Features are anonymised German Credit attributes: account status, loan purpose, credit history, savings, employment, \"\n    \"housing, age, dependents, telephone ownership, and foreign worker status.\",\n    font_size=13, color=GRAY)\n\n# ==================== SLIDE 3: METHODOLOGY ====================\nslide = add_slide(\"Methodology\", \"Models, Evaluation Metrics & Optimisation Framework\")\nadd_textbox(slide, 457200, 900000, 11500000, 400000,\n    \"Eight models were trained across both pipeline variants:\", font_size=16, bold=True, color=DARK_BLUE)\n\nmodels_data = [\n    [\"Ridge Regression\", \"Pipeline A\", \"MSE + sigmoid AUC\", \"alpha=1.0\"],\n    [\"Logistic Regression\", \"Pipeline A\", \"Log Loss + AUC\", \"max_iter=2000, solver='liblinear'\"],\n    [\"Decision Tree Classifier\", \"Pipeline A\", \"Weighted Leaf Gini + AUC\", \"max_depth=4, min_samples_leaf=20\"],\n    [\"Random Forest Regressor\", \"Pipeline A\", \"MSE + sigmoid AUC\", \"300 trees, unlimited depth, min_samples_leaf=1\"],\n    [\"Random Forest Classifier\", \"Pipeline A\", \"AUC\", \"300 trees, max_depth=5, min_samples_leaf=5\"],\n    [\"CatBoost Regressor\", \"Pipeline B\", \"RMSE + AUC\", \"1000 iters, lr=0.05, depth=6, use_best_model\"],\n    [\"CatBoost Classifier (Champion \u2713)\", \"Pipeline B\", \"Log Loss + AUC\", \"1000 iters, lr=0.05, depth=6, class_weighted\"],\n]\nadd_table(slide, 457200, 1400000, 11500000, 2800000, [\"Model\", \"Data Pipeline\", \"Metrics\", \"Key Hyperparameters\"], models_data,\n          col_widths=[2800000, 1800000, 3000000, 3900000])\n\nadd_textbox(slide, 457200, 4500000, 11500000, 400000,\n    \"Evaluation Framework:\", font_size=16, bold=True, color=DARK_BLUE)\nadd_bullet_box(slide, 457200, 4900000, 11000000, 2000000, [\n    \"\u2022 Primary metric: Validation AUC (area under ROC curve) \u2014 threshold-independent ranking quality\",\n    \"\u2022 Cost-sensitive loss = 5 \u00d7 False Negatives + 1 \u00d7 False Positives \u2014 asymmetric penalty reflecting business reality\",\n    \"\u2022 Threshold sweep: 0.01\u20130.99 step 0.01 to find the operating point minimising expected cost\",\n    \"\u2022 Interpretability: TreeSHAP global (feature importance beeswarm + bar chart) and local (waterfall for a FN case)\"\n], font_size=13)\n\n# ==================== SLIDE 4: MODEL COMPARISON TABLE ====================\nslide = add_slide(\"Model Comparison \u2014 Validation AUC\", \"Ranked by discrimination performance\")\n\ncomparison = [\n    [\"1\", \"CatBoost Classifier (Logloss)\", \"Pipeline B\", \"0.8207\", \"\u2713 Champion\"],\n    [\"2\", \"Logistic Regression\", \"Pipeline A\", \"0.8126\", \"\"],\n    [\"3\", \"CatBoost Regressor (RMSE)\", \"Pipeline B\", \"0.8061\", \"\"],\n    [\"4\", \"Random Forest Classifier\", \"Pipeline A\", \"0.8024\", \"\"],\n    [\"5\", \"Ridge Regression\", \"Pipeline A\", \"0.7992\", \"\"],\n    [\"6\", \"Random Forest Regressor\", \"Pipeline A\", \"0.7760\", \"\"],\n    [\"7\", \"Decision Tree Classifier\", \"Pipeline A\", \"0.6894\", \"\"],\n]\nadd_table(slide, 457200, 900000, 11500000, 3500000, [\"Rank\", \"Model\", \"Pipeline\", \"Validation AUC\", \"Notes\"], comparison,\n          col_widths=[600000, 3800000, 1800000, 2000000, 2400000])\n\nadd_textbox(slide, 457200, 4800000, 11000000, 2000000, \"Key Observations:\",\n    font_size=14, bold=True, color=DARK_BLUE)\nadd_bullet_box(slide, 457200, 5100000, 11000000, 1800000, [\n    \"\u2022 CatBoost Logloss (Pipeline B) achieves the highest AUC (0.8207) \u2014 selected as champion\",\n    \"\u2022 Logistic Regression (Pipeline A) is a close second (0.8126) with excellent interpretability\",\n    \"\u2022 Tree-based models on Pipeline A cluster near 0.80 AUC; Decision Tree underfits at 0.6894\",\n    \"\u2022 Pipeline B with native categorical handling gives CatBoost an edge over Pipeline A one-hot encoding\"\n], font_size=13)\n\n# ==================== SLIDE 5: CHAMPION MODEL JUSTIFICATION ====================\nslide = add_slide(\"Champion Model \u2014 CatBoost Logloss\", \"Why CatBoost Classifier on Pipeline B?\")\nadd_textbox(slide, 457200, 900000, 11000000, 400000,\n    \"The CatBoost Logloss classifier was selected as the champion model based on the following rationale:\",\n    font_size=15, color=BLACK)\nadd_bullet_box(slide, 457200, 1300000, 5500000, 5000000, [\n    \"Highest Validation AUC\",\n    \"  \u2014 0.8207, best discriminatory power among all candidates\",\n    \"\",\n    \"Native Categorical Handling\",\n    \"  \u2014 Works directly with raw string categories (Pipeline B)\",\n    \"  \u2014 Avoids one-hot expansion \u2192 preserves feature semantics\",\n    \"  \u2014 Reduces feature count 48 \u2192 20 for better interpretability\",\n    \"\",\n    \"Ordered Boosting & Symmetric Trees\",\n    \"  \u2014 Reduces prediction shift common in gradient boosting\",\n    \"  \u2014 Built-in cross-validation and early stopping\",\n    \"\",\n    \"Class Weighting\",\n    \"  \u2014 Inverse frequency weights handle 70/30 imbalance\"\n], font_size=13)\nadd_bullet_box(slide, 6800000, 1300000, 5500000, 5000000, [\n    \"Training Dynamics\",\n    \"  \u2014 Best iteration: 523 / 1000 (early stopping)\"\n    \"  \u2014 Train Log Loss: 0.2203, Val Log Loss: 0.4828\",\n    \"\",\n    \"vs. Logistic Regression (Runner-up)\",\n    \"  \u2014 AUC: 0.8207 vs 0.8126 (+0.8 pp)\",\n    \"  \u2014 Logistic Regression remains a strong baseline\",\n    \"  \u2014 Offers better native interpretability (linear coefficients)\",\n    \"\",\n    \"vs. CatBoost RMSE Regressor\",\n    \"  \u2014 AUC: 0.8207 vs 0.8061 (+1.5 pp)\",\n    \"  \u2014 Proper probabilistic loss (Logloss) outperforms MSE\",\n    \"  \u2014 RMSE predictions concentrated in [0.3, 0.7] range\",\n    \"\",\n    \"Interpretability Advantage\",\n    \"  \u2014 Built-in TreeSHAP on raw features\"\n], font_size=13)\n\n# ==================== SLIDE 6: THRESHOLD OPTIMISATION ====================\nslide = add_slide(\"Threshold Optimisation\", \"Default (0.50) vs Cost-Minimising Threshold (0.15)\")\n\nadd_textbox(slide, 457200, 900000, 11000000, 400000,\n    \"Cost function: Total Cost = 5 \u00d7 FN + 1 \u00d7 FP. Swept thresholds 0.01\u20130.99.\",\n    font_size=15, bold=True, color=DARK_BLUE)\n\n# Default threshold table\ndefault_headers = [\"\", \"Default (0.50)\", \"Optimised (0.15)\", \"Change\"]\ndefault_rows = [\n    [\"Threshold\", \"0.50\", \"0.15\", \"\u2193 70%\"],\n    [\"True Negatives (TN)\", \"119\", \"71\", \"\u2193 48\"],\n    [\"False Positives (FP)\", \"21\", \"69\", \"\u2191 48\"],\n    [\"False Negatives (FN)\", \"19\", \"6\", \"\u2193 13\"],\n    [\"True Positives (TP)\", \"41\", \"54\", \"\u2191 13\"],\n    [\"Total Cost\", \"116\", \"99\", \"\u2193 14.7%\"],\n    [\"Cost Reduction\", \"\u2014\", \"14.7%\", \"\"],\n]\nadd_table(slide, 457200, 1400000, 7000000, 3200000, default_headers, default_rows,\n          col_widths=[1800000, 2000000, 2000000, 1200000])\n\nadd_textbox(slide, 8200000, 1400000, 4500000, 400000,\n    \"Business Impact\", font_size=16, bold=True, color=DARK_BLUE)\nadd_bullet_box(slide, 8200000, 1800000, 4500000, 3000000, [\n    \"\u2022 Lowering threshold from 0.50 to 0.15\",\n    \"  catches 13 more Bad applicants\",\n    \"  (FN reduced from 19 \u2192 6)\",\n    \"\",\n    \"\u2022 Trade-off: 48 more Good applicants\",\n    \"  flagged for manual review\",\n    \"  (FP increased from 21 \u2192 69)\",\n    \"\",\n    \"\u2022 Net savings: 17 fewer cost units\",\n    \"  (14.7% reduction)\",\n    \"\",\n    \"\u2022 At scale: this 14.7% cost saving\",\n    \"  is substantial for a credit portfolio\"\n], font_size=13)\n\nadd_textbox(slide, 457200, 5000000, 11000000, 300000,\n    \"With FN penalised 5\u00d7 more than FP, the optimal threshold drops well below 0.50 \u2014 the model should be more aggressive \"\n    \"in flagging risky applicants.\",\n    font_size=14, color=GRAY)\n\n# ==================== SLIDE 7: SHAP GLOBAL ====================\nslide = add_slide(\"SHAP Global Interpretability\", \"Feature Importance & Directional Impact\")\n\nadd_textbox(slide, 457200, 900000, 11000000, 400000,\n    \"Top 10 features by mean absolute SHAP value (TreeSHAP on champion CatBoost Logloss model)\",\n    font_size=15, bold=True, color=DARK_BLUE)\n\nshap_headers = [\"Rank\", \"Feature\", \"Mean |SHAP|\", \"Direction\", \"Interpretation\"]\nshap_rows = [\n    [\"1\", \"checking_status\", \"0.71\", \"Negative \u2190 \u2192 Positive\", \"Deleterious account status \u2192 higher risk\"],\n    [\"2\", \"duration_months\", \"0.49\", \"Longer \u2194 Higher risk\", \"Longer loan terms increase default prob.\"],\n    [\"3\", \"savings_status\", \"0.38\", \"Lower savings \u2194 Higher risk\", \"Less savings buffer \u2192 more likely to default\"],\n    [\"4\", \"credit_amount\", \"0.30\", \"Higher amount \u2194 Higher risk\", \"Larger loans more likely to default\"],\n    [\"5\", \"credit_history\", \"0.29\", \"Poor history \u2194 Higher risk\", \"Past defaults strongly predictive\"],\n    [\"6\", \"other_installment_plans\", \"0.24\", \"Has plans \u2194 Higher risk\", \"Existing commitments increase burden\"],\n    [\"7\", \"purpose\", \"0.23\", \"Varies by purpose\", \"Car (new) & education higher risk\"],\n    [\"8\", \"employment_since\", \"0.19\", \"Unemployed \u2194 Higher risk\", \"Employment stability reduces risk\"],\n    [\"9\", \"installment_rate_pct\", \"0.18\", \"Higher rate \u2194 Higher risk\", \"More income committed \u2192 stress\"],\n    [\"10\", \"property\", \"0.16\", \"No property \u2194 Higher risk\", \"Real estate ownership as collateral\"],\n]\nadd_table(slide, 457200, 1400000, 11500000, 4200000, shap_headers, shap_rows,\n          col_widths=[550000, 2000000, 1500000, 2500000, 4200000])\n\nadd_textbox(slide, 457200, 5800000, 11000000, 1000000,\n    \"The SHAP analysis confirms domain heuristics: account status, loan term, savings, and credit history dominate. \"\n    \"Feature direction is intuitive \u2014 higher risk indicators push the prediction toward Bad (positive SHAP).\",\n    font_size=13, color=GRAY)\n\n# ==================== SLIDE 8: SHAP LOCAL ====================\nslide = add_slide(\"SHAP Local Interpretability \u2014 Record 22 (False Negative)\", \"Why was a Bad applicant misclassified as Good?\")\n\nadd_textbox(slide, 457200, 900000, 11000000, 350000,\n    \"Record 22: Actual Bad (default), predicted Good at default threshold (prob = 0.1697). \"\n    \"This is one of 6 FN cases remaining even after threshold optimisation.\",\n    font_size=14, color=BLACK)\n\nadd_textbox(slide, 457200, 1400000, 5500000, 400000,\n    \"Why the model predicted Good:\", font_size=16, bold=True, color=ACCENT_GREEN)\nadd_bullet_box(slide, 457200, 1800000, 5500000, 3500000, [\n    \"\u2022 checking_status = A14 (moderate balance)\",\n    \"    \u2192 Negative SHAP (pushed toward Good)\",\n    \"\u2022 duration_months = 12 (short loan term)\",\n    \"    \u2192 Strong negative SHAP contribution\",\n    \"\u2022 credit_amount = 2292 (relatively small loan)\",\n    \"    \u2192 Negative SHAP\",\n    \"\u2022 savings_status = A61 (moderate savings)\",\n    \"    \u2192 Negative SHAP\",\n    \"\u2022 credit_history = A34 (existing credits paid)\",\n    \"    \u2192 Negative SHAP\",\n], font_size=13)\n\nadd_textbox(slide, 6800000, 1400000, 5500000, 400000,\n    \"Why it was actually Bad:\", font_size=16, bold=True, color=ACCENT_RED)\nadd_bullet_box(slide, 6800000, 1800000, 5500000, 3500000, [\n    \"\u2022 Despite favourable signals, the applicant defaulted\",\n    \"\u2022 Possible reasons not captured by these features:\",\n    \"    \u2014 Unexpected life events (health, job loss)\",\n    \"    \u2014 Multiple parallel debts not captured\",\n    \"    \u2014 Payment behaviour variance within 'existing paid'\",\n    \"\",\n    \"\u2022 SHAP base value (log-odds): -1.10\",\n    \"\u2022 Final f(x) log-odds: -1.59\",\n    \"\u2022 Corresponding probability: ~0.17\",\n    \"\u2022 Even at optimised threshold 0.15 this remains below\",\n    \"  the cut \u2014 a genuinely hard case\"\n], font_size=13)\n\nadd_textbox(slide, 457200, 5600000, 11000000, 1200000,\n    \"This case highlights the value of SHAP for model debugging: the prediction is driven by objectively positive \"\n    \"financial indicators. A human reviewer would also likely approve this applicant. The 6 remaining FN cases after \"\n    \"threshold optimisation represent the irreducible risk in the portfolio.\",\n    font_size=13, color=GRAY)\n\n# ==================== SLIDE 9: BUSINESS RECOMMENDATIONS ====================\nslide = add_slide(\"Business Recommendations\", \"From Model to Decision Strategy\")\n\nadd_textbox(slide, 457200, 900000, 11000000, 400000,\n    \"Based on the full analysis, the following recommendations are made:\", font_size=16, bold=True, color=DARK_BLUE)\n\nrecs = [\n    \"1. Deploy CatBoost Logloss (Pipeline B) as the production scoring model\",\n    \"    \u2014 Highest AUC (0.8207), native categorical handling, built-in SHAP\",\n    \"\",\n    \"2. Use the optimised threshold of 0.15 for deployment\",\n    \"    \u2014 Achieves a 14.7% cost reduction over the default 0.50 threshold\",\n    \"    \u2014 At scale, this translates to significant risk-cost savings\",\n    \"\",\n    \"3. Implement a two-tier review process\",\n    \"    \u2014 Auto-approve: probability < 0.15 (predicted Good with high confidence)\",\n    \"    \u2014 Auto-decline: probability \u2265 0.50 (predicted Bad with high confidence)\",\n    \"    \u2014 Manual review: 0.15 \u2264 probability < 0.50 (the 'grey zone')\",\n    \"    \u2014 This captures more Bad cases while managing FP rate\",\n    \"\",\n    \"4. Monitor key SHAP drivers in production\",\n    \"    \u2014 checking_status, duration_months, savings_status are the top 3 risk factors\",\n    \"    \u2014 Track feature drift to detect changing risk patterns\",\n    \"\",\n    \"5. Consider Logistic Regression as a compliance-friendly fallback\",\n    \"    \u2014 AUC 0.8126 is competitive and fully transparent (linear weights)\",\n    \"    \u2014 Useful for regulated environments needing explicit coefficient justification\",\n    \"\",\n    \"6. Retrain periodically (6\u201312 months) with updated data\",\n    \"    \u2014 Champion CatBoost was early-stopped at iteration 523 / 1000\",\n    \"    \u2014 Monitor for concept drift in the credit environment\"\n]\nadd_bullet_box(slide, 457200, 1400000, 11500000, 5500000, recs, font_size=13)\n\n# ==================== SLIDE 10: SUMMARY ====================\nslide = add_slide(\"Summary\", \"Key Takeaways\")\n\nsummary_items = [\n    \"\u2022 Champion Model: CatBoost Classifier (Logloss) on Pipeline B \u2014 Validation AUC = 0.8207\",\n    \"\",\n    \"\u2022 Threshold Optimisation: Moving from 0.50 to 0.15 reduces total cost by 14.7% (116 \u2192 99)\",\n    \"\",\n    \"\u2022 Top Risk Factors: checking_status, duration_months, and savings_status account for the majority of\",\n    \"  predictive power (TreeSHAP analysis)\",\n    \"\",\n    \"\u2022 Hard Cases: Even the best model leaves 6 FN cases at the optimised threshold \u2014 representing irreducible\",\n    \"  risk from unobserved factors\",\n    \"\",\n    \"\u2022 Interpretability: SHAP provides both global and local explanations, enabling transparent credit decisions\",\n    \"  and regulatory compliance\"\n]\nadd_bullet_box(slide, 457200, 900000, 11000000, 5500000, summary_items, font_size=15)\n\n# Add images to the relevant slides\n# Slide 6 (index 5) \u2014 threshold optimisation \u2014 add screenshot\n# Actually let me embed the cost_vs_threshold.png into the threshold slide (slide index 5)\n\n# I'll use slide index 5 (0-indexed) for the threshold optimisation \u2014 add the chart\n# Slide 5 = the threshold slide\n# Let me re-think which slide is which\nslides_list = list(prs.slides)\n# SLIDE 0: Title\n# SLIDE 1: Dataset Overview\n# SLIDE 2: Methodology\n# SLIDE 3: Model Comparison\n# SLIDE 4: Champion Justification\n# SLIDE 5: Threshold Optimisation\n# SLIDE 6: SHAP Global\n# SLIDE 7: SHAP Local\n# SLIDE 8: Business Recommendations\n# SLIDE 9: Summary\n\n# Add cost_vs_threshold chart to slide 5\nif os.path.exists('cost_vs_threshold.png'):\n    slides_list[5].shapes.add_picture('cost_vs_threshold.png', Emu(457200), Emu(4500000), Emu(5500000), Emu(2700000))\n\n# Add training_curves to champion slide (slide 4)\nif os.path.exists('training_curves.png'):\n    slides_list[4].shapes.add_picture('training_curves.png', Emu(6800000), Emu(1300000), Emu(5800000), Emu(3300000))\n\n# Add roc_curves to model comparison (slide 3)\nif os.path.exists('roc_curves.png'):\n    slides_list[3].shapes.add_picture('roc_curves.png', Emu(457200), Emu(4600000), Emu(5500000), Emu(2600000))\n\n# Save\noutput_path = 'credit_risk_analysis.pptx'\nprs.save(output_path)\nprint(f\"Saved {output_path}\")\nprint(f\"Total slides: {len(prs.slides)}\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/build_deck.py",
+      "timeout": 30
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:58:11.160Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'PYEOF' > /tmp/dtreg_credit.py\nimport numpy as np\nimport pandas as pd\nfrom sklearn.tree import DecisionTreeRegressor\nfrom sklearn.metrics import mean_squared_error, roc_auc_score\n\ntrain = pd.read_csv('data/german_train_80.csv')\nval = pd.read_csv('data/german_val_20.csv')\n\nX_train = train.drop(columns=['target_good'])\ny_train = train['target_good']\nX_val = val.drop(columns=['target_good'])\ny_val = val['target_good']\n\ndtr = DecisionTreeRegressor(max_depth=5, random_state=42)\ndtr.fit(X_train, y_train)\n\npred_train = dtr.predict(X_train)\npred_val = dtr.predict(X_val)\n\ntrain_mse = mean_squared_error(y_train, pred_train)\nval_mse = mean_squared_error(y_val, pred_val)\n\n# AUC using raw predictions as scores\nval_auc = roc_auc_score(y_val, pred_val)\n\nprint(f\"@train_mse[{train_mse:.4f}] @val_mse[{val_mse:.4f}] @val_auc[{val_auc:.4f}]\")\nPYEOF\ncd /home/oishika/.openclaw/workspace && python3 /tmp/dtreg_credit.py",
+      "timeout": 30
+    }
+  },
+  {
+    "timestamp": "2026-07-17T08:58:56.282Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "ls -la roc_curves.png",
+      "workdir": "/home/oishika/.openclaw/workspace"
+    }
+  }
+]

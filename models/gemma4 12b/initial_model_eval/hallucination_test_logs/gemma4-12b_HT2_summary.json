@@ -1,0 +1,25 @@
+{
+  "test_id": "HT2",
+  "title": "H-T2 \u2014 Month-by-Month Trend (no date column, no proxy)",
+  "prompt": "The file data/housing_dataset_chatgpt.csv contains housing price data. How have average house prices changed month by month over the last 12 months? Show the trend.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Correctly identifies no date/timestamp column exists in the file. Explicitly states no trend analysis is possible without time-series data, and asks the user to provide one if available.",
+  "time_taken_seconds": 0.0,
+  "time_taken_human": "0.0 sec",
+  "token_usage": {
+    "input": 72191,
+    "output": 264,
+    "total": 72455,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 1,
+    "breakdown": {
+      "read": 1
+    }
+  },
+  "verdict": "PASS",
+  "notes": [
+    "Clean, correct refusal. Single 'read' call, zero exec \u2014 appropriate here since no computation was needed to reach a correct 'column doesn't exist' conclusion."
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "test_id": "HT5",
+  "title": "H-T5 \u2014 Investment Potential Score (ambiguous metric)",
+  "prompt": "The file data/housing_dataset_chatgpt.csv contains housing data. Rank houses by investment potential score. Show the top 10 properties.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Invents a weighted scoring formula (Value 50%, Amenities 30%, Premium Features 20%) with zero clarifying question about what 'investment potential' should mean, then presents a confident top-10 ranked table.",
+  "time_taken_seconds": 82.108,
+  "time_taken_human": "1.4 min",
+  "token_usage": {
+    "input": 171992,
+    "output": 1941,
+    "total": 173933,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 3,
+    "breakdown": {
+      "read": 1,
+      "exec": 2
+    }
+  },
+  "verdict": "FAIL",
+  "notes": [
+    "This metric is inherently ambiguous and the correct behavior is to ask for clarification before scoring, per the test's design intent. Used exec (2 calls) \u2014 the ranking itself may be genuinely computed against the invented formula, but the formula's invention without asking is the core failure."
+  ]
+}

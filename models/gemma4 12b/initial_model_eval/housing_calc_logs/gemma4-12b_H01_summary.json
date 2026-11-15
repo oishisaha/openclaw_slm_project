@@ -1,0 +1,23 @@
+{
+  "test_id": "H01",
+  "title": "H01 \u2014 Mean Price (Easy)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Calculate the mean price of all houses in the dataset. Ignore rows with missing values in the price column. Use Python to calculate the mean. Report your answer in this exact format: @mean_price[value] where value is a number rounded to two decimal places.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "@mean_price[4766729.25]",
+  "time_taken_seconds": 0.0,
+  "time_taken_human": "0.0 sec",
+  "token_usage": {
+    "input": 49046,
+    "output": 70,
+    "total": 49116,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 1,
+    "breakdown": {
+      "exec": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": []
+}

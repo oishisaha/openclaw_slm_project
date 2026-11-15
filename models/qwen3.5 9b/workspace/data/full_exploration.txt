@@ -1,0 +1,14 @@
+============================================================
+HOUSING DATASET EXPLORATION REPORT
+============================================================ 
+--- FILE METADATA --- 
+Number of rows: 545
+============================================================
+HOUSING DATASET EXPLORATION REPORT
+============================================================ 
+--- FILE METADATA --- 
+Number of rows: 545
+
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+TypeError: 'StringArray' object is not callable

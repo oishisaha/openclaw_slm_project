@@ -1,0 +1,4 @@
+  File "<string>", line 1
+    import pandas as pd; import matplotlib.pyplot as plt, numpy as np\nprint('Generating housing visualisations...')\ndata = pd.read_csv('/home/vboxuser/.openclaw/workspace/data/housing_dataset.csv')
+                                                                      ^
+SyntaxError: unexpected character after line continuation character

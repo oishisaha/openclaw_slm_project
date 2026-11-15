@@ -1,0 +1,24 @@
+{
+  "test_id": "Test2",
+  "title": "Test2 \u2014 Price Distribution Summary",
+  "prompt": "Analyze the distribution of housing prices. Report: minimum price, maximum price, average price, median price. Explain whether expensive outliers exist.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Min 1,750,000 / Max 13,300,000 / Avg ~4,926,890.55 / Median 4,900,000. Concluded expensive outliers exist in the $11M-$13M premium tier.",
+  "time_taken_seconds": 2.299,
+  "time_taken_human": "2.3 sec",
+  "token_usage": {
+    "input": 93994,
+    "output": 288,
+    "total": 94282,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 2,
+    "breakdown": {
+      "exec": 1,
+      "read": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": []
+}

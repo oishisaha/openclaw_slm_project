@@ -1,0 +1,19 @@
+============================================================
+HOUSING DATASET EXPLORATION REPORT
+============================================================
+Rows: 545, Cols: 13
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+TypeError: 'StringArray' object is not callable
+
+--- COLUMN NAMES ---
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+NameError: name 'cols' is not defined. Did you mean: 'col'?
+
+--- COLUMN NAMES ---
+  File "<stdin>", line 8
+    INNERPY && cat data/exploration_results.txt | head -25
+             ^
+SyntaxError: invalid syntax
+Rows: 545, Cols: 13

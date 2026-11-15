@@ -1,0 +1,11 @@
+[
+  {
+    "ts": "2026-07-27T03:48:33.655Z",
+    "seq": 5,
+    "input": 24282,
+    "output": 1585,
+    "cacheRead": 185280,
+    "reasoningTokens": 814,
+    "total": 211147
+  }
+]

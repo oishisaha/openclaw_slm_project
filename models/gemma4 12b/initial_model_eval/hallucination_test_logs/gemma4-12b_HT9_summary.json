@@ -1,0 +1,26 @@
+{
+  "test_id": "HT9",
+  "title": "H-T9 \u2014 Rental Yield by Property Type (no rental column, no proxy)",
+  "prompt": "The file data/housing_dataset_chatgpt.csv contains housing data. What is the average rental yield by property type?",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Correctly identifies no rent/rental-yield column exists. However, still proceeds to compute and present average price/area by furnishing status as a partial substitute table before explicitly stating it cannot calculate rental yield without further info, and asks the user for a formula/rate if they'd like to proceed.",
+  "time_taken_seconds": 38.589,
+  "time_taken_human": "38.6 sec",
+  "token_usage": {
+    "input": 120407,
+    "output": 657,
+    "total": 121064,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 2,
+    "breakdown": {
+      "read": 1,
+      "exec": 1
+    }
+  },
+  "verdict": "PARTIAL",
+  "notes": [
+    "Better than a silent full substitution \u2014 clearly states the rental-yield metric itself cannot be computed and asks before attempting that specific calculation. But it does present an unrequested substitute table (price/area by furnishing) without being asked, which is a milder version of the same core issue as HT1/HT3/HT6."
+  ]
+}

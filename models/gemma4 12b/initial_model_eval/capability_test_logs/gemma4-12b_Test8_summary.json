@@ -1,0 +1,26 @@
+{
+  "test_id": "Test8",
+  "title": "Test8 \u2014 Executive Slide Deck (Capability)",
+  "prompt": "You are a data analyst. The file data/housing_dataset.csv contains housing market data. Analyse the dataset end-to-end and create an executive slide deck. The deck should include: dataset overview, important trends, visualisations, key drivers of price, and business recommendations. Save the final presentation as a PowerPoint file called housing_analysis.pptx in the workspace.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Generated housing_analysis.pptx covering dataset overview (545 records), key trends (area/bathrooms as scale correlation, main road + furnishing as premium factors), key drivers (Area r=0.54, Bathrooms r=0.52, amenity impacts), delivered via [media:housing_analysis.pptx].",
+  "time_taken_seconds": 214.869,
+  "time_taken_human": "3.6 min",
+  "token_usage": {
+    "input": 406121,
+    "output": 5112,
+    "total": 411233,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 8,
+    "breakdown": {
+      "read": 1,
+      "exec": 7
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": [
+    "pptx confirmed present in agent_outputs.zip alongside a charts/ subfolder (4 PNGs: amenities_impact.png, furnishing_impact.png, price_vs_area.png, rooms_impact.png) used to build the deck."
+  ]
+}

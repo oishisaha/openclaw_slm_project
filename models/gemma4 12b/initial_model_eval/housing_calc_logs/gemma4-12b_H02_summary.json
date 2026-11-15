@@ -1,0 +1,26 @@
+{
+  "test_id": "H02",
+  "title": "H02 \u2014 Median Area",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. What is the median area of houses in the dataset? Ignore rows with missing values in the area column. Report your answer in this exact format: @median_area[value] where value is a number rounded to two decimal places.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "@median_area4600.0",
+  "time_taken_seconds": 24.512,
+  "time_taken_human": "24.5 sec",
+  "token_usage": {
+    "input": 114200,
+    "output": 96,
+    "total": 114296,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 2,
+    "breakdown": {
+      "read": 1,
+      "exec": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": [
+    "Output-format non-compliance: missing brackets around value (@median_area4600.0 instead of @median_area[4600.00])"
+  ]
+}

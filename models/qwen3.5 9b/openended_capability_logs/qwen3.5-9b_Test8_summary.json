@@ -1,0 +1,30 @@
+{
+  "test_id": "Test8",
+  "title": "Test 8 \u2014 Executive PowerPoint (Email Task)",
+  "prompt": "You are a data analyst. The file data/housing_dataset.csv contains housing market data. Analyse the dataset end-to-end and create an executive slide deck. The deck should include: dataset overview, important trends, visualisations, key drivers of price, and business recommendations. Save the final presentation as a PowerPoint file called housing_analysis.pptx in the workspace.",
+  "session_id": "a0d657d1-09e6-4565-8e88-43a2d70697dc",
+  "model": "ollama/qwen3.5:9b",
+  "model_output": "Substantial narrated intention ('Let me create a comprehensive Python script...') but only 8 actual tool calls; no housing_analysis.pptx file exists in the workspace (confirmed by direct inspection).",
+  "time_taken_seconds": 61.277,
+  "time_taken_human": "1.0 min",
+  "token_usage": {
+    "input": 390602,
+    "output": 3251,
+    "total": 393853,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 8,
+    "breakdown": {
+      "read": 3,
+      "exec": 2,
+      "process": 1,
+      "write": 2
+    }
+  },
+  "verdict": "FAIL -- incomplete, confirmed zero output",
+  "notes": [
+    "Only 8 tool calls (3 read, 2 exec, 2 write, 1 process) despite a disproportionately large amount of reasoning text in the transcript -- much of the 'work' described was narrated intention rather than actual tool invocation, a lighter-weight variant of the Type B pattern (reasoning substituting for tool calls) rather than the heavier Type E retry-loop seen in Test3/6/7.",
+    "CONFIRMED by direct workspace inspection: no housing_analysis.pptx file exists, consistent with your own observation."
+  ]
+}

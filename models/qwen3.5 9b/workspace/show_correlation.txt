@@ -1,0 +1,17 @@
+
+
+import pandas as pd  
+df = pd.read_csv('/home/vboxuser/.openclaw/workspace/data/housing_preprocessed.csv')  
+
+correlations_dict = {} 
+for col in df.columns:
+    if col != 'price':
+        corr_val = round(df[col].corr(df['price']), 4)
+
+print("=" * 90 + "\nHOUSING DATA CORRELATION WITH PRICE\n" "=" * 95  
+rank_counter = [1] 
+sorted_correlations_list = [] 
+for feature, (corr_value, data_type in correlations_dict.items():
+    sorted_correlations_list.append((corr_val[0], corr_val[1]))  
+
+print(f"\nTotal features analyzed: {len(sorted_correlations_list)}")

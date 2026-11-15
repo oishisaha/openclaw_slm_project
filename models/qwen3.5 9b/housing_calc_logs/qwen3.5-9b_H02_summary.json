@@ -1,0 +1,29 @@
+{
+  "test_id": "H02",
+  "title": "H02 \u2014 Median Area (Easy)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. What is the median area of houses in the dataset? Ignore rows with missing values in the area column. Report your answer in this exact format: @median_area[value] where value is a number rounded to two decimal places.",
+  "session_id": "744151ff-1ce2-451e-a411-92fa44544543",
+  "model": "ollama/qwen3.5:9b",
+  "ground_truth": "@median_area[4600.00]",
+  "model_output": "@median_area[4643] \u2014 computed via manual bash/awk sort + averaging two adjacent values, not a statistics library call.",
+  "time_taken_seconds": 53.386,
+  "time_taken_human": "53.4 sec",
+  "token_usage": {
+    "input": 594121,
+    "output": 1365,
+    "total": 595486
+  },
+  "tool_calls": {
+    "total": 13,
+    "breakdown": {
+      "read": 2,
+      "write": 2,
+      "exec": 9
+    }
+  },
+  "verdict": "FAIL \u2014 wrong value",
+  "notes": [
+    "First exec used bare \"python\" (likely failed silently, no python3 retry) \u2014 abandoned working Python approach for fragile bash/awk pipelines instead.",
+    "One exec command is malformed shell syntax; row-count assumptions shift across the session (208, then 546, then 278/279)."
+  ]
+}

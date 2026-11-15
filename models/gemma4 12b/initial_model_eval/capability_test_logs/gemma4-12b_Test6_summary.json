@@ -1,0 +1,26 @@
+{
+  "test_id": "Test6",
+  "title": "Test6 \u2014 Visualization Suite (Capability)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Create visualisations showing the main factors affecting house prices. Generate: 1. a price distribution histogram, 2. an area vs price scatter plot, 3. a bar chart of average price by furnishing status. Save each chart as a PNG file in the workspace and explain the key insight from each chart.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Generated price_distribution.png, area_vs_price.png, average_price_by_furnishing.png with a written insight for each chart.",
+  "time_taken_seconds": 58.61,
+  "time_taken_human": "58.6 sec",
+  "token_usage": {
+    "input": 184941,
+    "output": 1110,
+    "total": 186051,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 4,
+    "breakdown": {
+      "exec": 3,
+      "read": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": [
+    "All 3 PNGs confirmed present in agent_outputs.zip, matching filenames exactly as named in the model's own response text."
+  ]
+}

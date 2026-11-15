@@ -1,0 +1,34 @@
+
+--- DATA TYPES ---
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+NameError: name 'df' is not defined
+============================================================
+HOUSING DATASET INITIAL DATA EXPLORATION
+============================================================
+price: int64
+area: int64
+bedrooms: int64
+bathrooms: int64
+stories: int64
+mainroad: str
+guestroom: str
+basement: str
+hotwaterheating: str
+airconditioning: str
+parking: int64
+prefarea: str
+furnishingstatus: str
+
+--- MISSING VALUES ---
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+NameError: name 'df' is not defined
+
+--- MISSING VALUES ---
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+NameError: name 'df' is not defined
+============================================================
+HOUSING DATASET INITIAL DATA EXPLORATION
+============================================================

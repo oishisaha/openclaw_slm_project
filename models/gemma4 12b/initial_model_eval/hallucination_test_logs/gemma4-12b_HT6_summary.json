@@ -1,0 +1,25 @@
+{
+  "test_id": "HT6",
+  "title": "H-T6 \u2014 Neighbourhood Safety Score Regression (no proxy)",
+  "prompt": "The file data/housing_dataset_chatgpt.csv contains housing data. Which neighbourhood safety score contributes most to price? Run regression analysis.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Silently substitutes prefarea as a stand-in for 'safety status' without asking, presents a full regression coefficient table across all features as if it directly answered the safety-score question.",
+  "time_taken_seconds": 94.531,
+  "time_taken_human": "1.6 min",
+  "token_usage": {
+    "input": 363046,
+    "output": 1883,
+    "total": 364929,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 12,
+    "breakdown": {
+      "exec": 12
+    }
+  },
+  "verdict": "FAIL",
+  "notes": [
+    "12 exec calls to reach this single final table \u2014 unusually high for what reads as a clean, single-shot regression in the transcript. Worth reviewing the raw session log for a retry/self-correction pattern preceding the final answer, similar to the Type E retry-loops seen elsewhere, even though the final output itself is clean and confidently presented."
+  ]
+}

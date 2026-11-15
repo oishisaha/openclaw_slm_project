@@ -1,0 +1,24 @@
+{
+  "test_id": "H05",
+  "title": "H05 \u2014 Correlation: Price vs Area",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Calculate the Pearson correlation coefficient between house price and area. Ignore rows with missing values in either column. Report your answer in this exact format: @correlation_price_area[value] where value is a number between -1 and 1 rounded to two decimal places.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "@correlation_price_area[0.54]",
+  "time_taken_seconds": 29.421,
+  "time_taken_human": "29.4 sec",
+  "token_usage": {
+    "input": 139354,
+    "output": 320,
+    "total": 139674,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 3,
+    "breakdown": {
+      "exec": 2,
+      "read": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": []
+}

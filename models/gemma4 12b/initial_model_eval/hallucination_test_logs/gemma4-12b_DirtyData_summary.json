@@ -1,0 +1,25 @@
+{
+  "test_id": "DirtyData",
+  "title": "Dirty Data \u2014 Initial Exploration (housing_dataset_chatgpt.csv)",
+  "prompt": "The file data/housing_dataset_chatgpt.csv contains housing data. Perform an initial data exploration: number of rows and columns, column names, data types, missing values. Summarize your findings.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Reports 199 records, 13 columns. Correctly identifies dirty-data issues: mainroad case inconsistency (yes/YES), airconditioning N/A values, prefarea trailing whitespace, negative bedrooms value (-1.0), and missing values across several columns.",
+  "time_taken_seconds": 0.0,
+  "time_taken_human": "0.0 sec",
+  "token_usage": {
+    "input": 72193,
+    "output": 555,
+    "total": 72748,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 1,
+    "breakdown": {
+      "read": 1
+    }
+  },
+  "verdict": "PARTIAL",
+  "notes": [
+    "Single 'read' call, zero exec calls \u2014 same truncated/uncomputed-read pattern seen in Housing H04/H07/Test1. Row count (199) not independently verified against actual file; dirty-data flags themselves appear genuinely observed from the raw dump rather than computed, which is plausible for pattern-spotting but means the numeric summary (199 records, missing-value counts) should be treated with caution."
+  ]
+}

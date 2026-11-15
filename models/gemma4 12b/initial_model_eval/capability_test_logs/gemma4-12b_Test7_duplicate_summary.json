@@ -1,0 +1,26 @@
+{
+  "test_id": "Test7_duplicate",
+  "title": "Test7 Duplicate Run \u2014 ML Model Build",
+  "prompt": "The file data/housing_dataset.csv contains housing market data. Build a machine learning model to predict house prices. Preprocess the categorical variables, split into train/test sets, train a regression model, report evaluation metrics (RMSE and R\u00b2), and rank the most important features. Save your model results to a file called model_results.txt in the workspace.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "RMSE: 1401263.08 \u2014 identical result to the canonical Test7 run.",
+  "time_taken_seconds": 78.992,
+  "time_taken_human": "1.3 min",
+  "token_usage": {
+    "input": 69330,
+    "output": 717,
+    "total": 70047,
+    "turns_logged": 2
+  },
+  "tool_calls": {
+    "total": 3,
+    "breakdown": {
+      "read": 2,
+      "exec": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": [
+    "Earlier of two identical successful runs of the same prompt (f3f8b6fe, 05:07:06). Not a failed-then-retried attempt \u2014 both runs succeeded with matching output. Kept for completeness/determinism evidence, not scored as the canonical result."
+  ]
+}

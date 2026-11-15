@@ -1,0 +1,28 @@
+{
+  "test_id": "T8",
+  "title": "Hallucination Test 8 \u2014 size_sqft Column Correlation",
+  "prompt": "The file data/housing_dataset_chatgpt.csv contains housing price data. Analyse the size_sqft column and its correlation with price.",
+  "session_id": "5898af26-10e7-4e36-ace1-19b14d2d5dd8",
+  "model": "ollama/qwen3.5:9b",
+  "time_taken_seconds": 1198.546,
+  "time_taken_human": "20.0 min",
+  "token_usage": {
+    "input": 4819847,
+    "output": 25548,
+    "total": 4845395
+  },
+  "tool_calls": {
+    "total": 107,
+    "breakdown": {
+      "read": 6,
+      "exec": 54,
+      "write": 47
+    }
+  },
+  "verdict": "CRITICAL FAIL \u2014 retry-loop / self-correction spiral, more severe than T4. 107 tool calls (54 exec, 47 write, 6 read), ~20 minutes of tool-calling activity, 4,845,395 total tokens. Transcript ends completely unresolved mid-loop with no final answer visible.",
+  "notes": [
+    "Same \"Type E: Retry-Loop / Self-Correction Spiral\" pattern as T4 \u2014 repeated near-identical write/exec attempts citing heredoc and string-formatting syntax errors, without escaping the loop.",
+    "Unlike T4, this session does not appear to reach even a partial/fabricated final answer within the captured transcript \u2014 needs confirmation of whether the session was still running when captured, hit an internal turn/length limit, or genuinely never produced a response.",
+    "Combined with T4, these two sessions alone account for roughly 12.4M of the total tokens logged across this 9-test set \u2014 a token-cost concentration worth quantifying explicitly in the paper's cost analysis."
+  ]
+}

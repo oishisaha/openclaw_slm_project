@@ -1,0 +1,30 @@
+{
+  "test_id": "Test1",
+  "title": "Test 1 \u2014 Data Inspection",
+  "prompt": "The file data/housing_dataset.csv contains housing data. Perform an initial data exploration: number of rows and columns, column names, data types, missing values. Summarize your findings.",
+  "session_id": "bba4a36b-716e-4263-b99f-ccbdb32418bb",
+  "model": "ollama/qwen3.5:9b",
+  "model_output": "Correct row/column counts (545 x 13), correct dtypes, correctly reports zero missing values. Also mislabels the 'prefarea' column as \"str (prefecture/region)\" -- the dataset's naming pattern (mainroad, guestroom, basement, hotwaterheating, airconditioning) strongly indicates prefarea is a binary yes/no 'preferred area' flag, not a geographic region.",
+  "time_taken_seconds": 372.767,
+  "time_taken_human": "6.2 min",
+  "token_usage": {
+    "input": 3096028,
+    "output": 11293,
+    "total": 3107321,
+    "turns_logged": 2
+  },
+  "tool_calls": {
+    "total": 83,
+    "breakdown": {
+      "read": 17,
+      "exec": 41,
+      "write": 25
+    }
+  },
+  "verdict": "PARTIAL -- correct core stats, but a fabricated/incorrect column interpretation, reached only after an extreme retry storm",
+  "notes": [
+    "83 tool calls (41 exec, 25 write, 17 read) and ~6.2 minutes elapsed before landing on a working script -- extreme trial-and-error even though the eventual output was reasonable.",
+    "prefarea mislabeled as 'prefecture/region' -- a fabricated interpretation of a real column, inconsistent with the dataset's own binary-flag naming convention used for every other yes/no column.",
+    "Two separate model.completed usage entries logged (484,669 then 2,622,652 tokens) for what was presented as a single-prompt turn -- likely an internal continuation after hitting a length boundary mid-turn, not a second user exchange. Token totals here are summed across both entries."
+  ]
+}

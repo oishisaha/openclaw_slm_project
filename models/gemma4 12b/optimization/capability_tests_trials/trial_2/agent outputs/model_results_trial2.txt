@@ -1,0 +1,17 @@
+Model Evaluation Metrics:
+RMSE: 1401263.08
+R^2: 0.6115
+
+Feature Importance Ranking:
+area: 0.4704
+bathrooms: 0.1527
+airconditioning: 0.0623
+parking: 0.0566
+stories: 0.0548
+furnishingstatus: 0.0504
+bedrooms: 0.0480
+basement: 0.0317
+prefarea: 0.0300
+hotwaterheating: 0.0171
+guestroom: 0.0159
+mainroad: 0.0101

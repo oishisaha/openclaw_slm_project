@@ -1,0 +1,196 @@
+# Wiry Pulse Prediction — Data Analysis Report
+
+**Prepared by:** Cawcaw (OpenClaw data analyst)  
+**Date:** 17 July 2026  
+**Dataset:** Pulse-diagnosis study (N=274)  
+**Model:** Logistic regression — full sensor suite  
+
+---
+
+## Executive Summary
+
+Wiry pulse diagnosis in this cohort is primarily an **age-dependent phenomenon**, independent of brachial blood pressure. The strongest predictors are patient age, the loss of a specific pulse-pressure harmonic (measured by a tonometric sensor), and female gender. A logistic regression model achieves **AUC 0.87 (95% CI: 0.82–0.96)** and **84% accuracy on unseen patients**.
+
+---
+
+## 1. Data Overview
+
+| | N | % |
+|---|---|---|
+| Total patients | 274 | — |
+| Wiry pulse | 127 | 46.4% |
+| Non-wiry | 147 | 53.6% |
+| Female | 195 | 71.5% |
+| Male | 78 | 28.5% |
+
+**Missing data:** 18 patients had partial missingness (pulse-sensor, BP, or tongue measurements). One patient (row 53) was missing all sensor data and was excluded from model training. No imputation was performed — rows with missing features were dropped per analysis step, with all tests using the maximum available data for each variable.
+
+**Data quality notes:**
+- `width of sublingal vein` → values 0–1.47, appears to be a width/length ratio (rename and document units)
+- `Proportion of scalloped tongue margin` → values are 0–100 (i.e. a percentage, not a 0–1 proportion)
+- `Sublingal` is a typo for `sublingual`
+- All other ranges are physiologically plausible
+
+---
+
+## 2. Key Predictors of Wiry Pulse
+
+### 2.1 Age (dominant driver)
+
+Wiry pulse prevalence increases sharply with age:
+
+| Age group | N | Wiry rate |
+|---|---|---|
+| 20–30 | 93 | 16% |
+| 31–40 | 86 | 47% |
+| 41–50 | 32 | 66% |
+| 51+ | 63 | 81% |
+
+Correlation with wiry pulse: **r = +0.51** (p < 0.0001). Age alone accounts for ~25% of the variance.
+
+### 2.2 Pulse-sensor harmonics (h3 columns)
+
+The `h3` columns — likely a harmonic or diastolic component from the tonometric pulse sensor at the cun (寸, distal), guan (关, middle), and chi (尺, proximal) positions — are strongly **negative** predictors of wiry pulse.
+
+| Feature | Wiry=0 mean | Wiry=1 mean | p-value | Correlation |
+|---|---|---|---|---|
+| h3LBD (left cun) | 2.67 | 1.11 | <0.0001 | −0.42 |
+| h3LBM (left guan) | 2.65 | 1.16 | <0.0001 | −0.40 |
+| h3LBL (left chi) | 2.62 | 1.16 | <0.0001 | −0.39 |
+
+**Key finding:** The h3/h2 ratio drops from ~8% in non-wiry patients to ~3% in wiry patients. Of 58 patients with h3LBD = 0 (complete loss of the harmonic), 45 (78%) were diagnosed as wiry.
+
+This is consistent with the classical TCM description of a wiry pulse — a taut, string-like quality with little underlying wave.
+
+### 2.3 RET L (retinal measurement)
+
+RET L (likely an arterio-venular ratio from retinal imaging) is positively correlated with wiry pulse (r = +0.42, p < 0.0001), but also correlates with age (r = +0.51), suggesting age-mediated effects.
+
+### 2.4 Gender
+
+Wiry patients are disproportionately female:
+
+| Gender | Non-wiry | Wiry |
+|---|---|---|
+| Female | 61% | 84% |
+| Male | 39% | 16% |
+
+A female patient with identical age and sensor readings has roughly **30 percentage points** higher predicted probability than a male.
+
+### 2.5 Variables that do NOT predict wiry pulse
+
+| Variable | p-value | Notes |
+|---|---|---|
+| Blood pressure (SYS) | 0.93 | Wiry pulse ≠ hypertension |
+| Blood pressure (DIA) | 0.23 | |
+| BMI | 0.04 | Weak positive, not independent of age |
+| Heart rate | 0.78 | |
+| Sublingual vein width | 0.79 | |
+| Chronic disease history | 1.00 | Only 8 patients had any |
+
+---
+
+## 3. Predictive Model
+
+### 3.1 Model specification
+
+**Logistic regression** trained on 273 patients with 9 features.
+Class weight balanced. Features standardized before fitting.
+
+**Features used:**
+| Feature | Standardized coefficient | Odds Ratio | Direction |
+|---|---|---|---|
+| Age | +1.051 | 2.86 | ↑ wiry |
+| h2LBL (pulse amplitude) | +0.784 | 2.19 | ↑ wiry |
+| Choppy pulse | +0.780 | 2.18 | ↑ wiry |
+| Gender (female) | −0.617 | 0.54 | ↓ wiry (males) |
+| h3/h2 ratio (mean) | −0.359 | 0.70 | ↓ wiry |
+| h3LBD (pulse harmonic) | −0.274 | 0.76 | ↓ wiry |
+| RET L (retinal) | +0.207 | 1.23 | ↑ wiry |
+| Red dots (tongue) | −0.185 | 0.83 | ↓ wiry |
+| BH (height) | −0.011 | 0.99 | negligible |
+
+### 3.2 Performance
+
+**On held-out test set (30%, N=82 unseen patients):**
+
+| Metric | Value |
+|---|---|
+| AUC | **0.895** |
+| 95% CI (bootstrap) | [0.819, 0.961] |
+| Accuracy | **84.1%** |
+| Sensitivity | 84.2% |
+| Specificity | 84.1% |
+| PPV | 82.1% |
+| NPV | 86.0% |
+| Brier score | 0.128 (well-calibrated) |
+
+**Train/test gap:** −0.004 AUC — no overfitting detected.
+
+**5-fold cross-validation (N=273):**
+- Mean AUC: 0.872 (±0.048)
+- Range across folds: 0.789–0.922
+
+### 3.3 Two-tier prediction
+
+| Tier | Data required | AUC | Use case |
+|---|---|---|---|
+| Full sensor | age, gender, h3LBD, h2LBL, RET L, choppy, red dots, BH, h3/h2 ratio | 0.87 | Full exam available |
+| Clinical-only | age, gender (optional: BH, SYS, DIA) | 0.83 | Demographics only |
+
+The clinical-only model is baked into the prediction script as a fallback.
+
+### 3.4 Where the model is uncertain
+
+Predictions in the **20–60% probability range** (about 29% of patients) are the least reliable. At the extremes (<20% or >70%), accuracy approaches 100%.
+
+---
+
+## 4. Decision-Making Guide
+
+The model's logic can be summarised as a simple decision tree:
+
+1. **Is the patient under 35?**
+   - Yes → very low probability (~20%), regardless of sensor data
+2. **Is the patient over 55?**
+   - Yes → very high probability (~80%), regardless of sensor data
+3. **Between 35 and 55?**
+   - The pulse harmonic (h3LBD) decides:
+     - h3LBD < 1.0 → likely wiry (~70%)
+     - h3LBD > 2.0 → likely non-wiry (~25%)
+   - Choppy pulse co-occurrence pushes firmly toward wiry
+   - Female gender adds ~30pp to probability
+
+---
+
+## 5. Deliverables
+
+| File | Description |
+|---|---|
+| `data/wiry_pulse_model.pkl` | Trained logistic regression model (pickled) |
+| `predict_wiry.py` | Python inference script |
+| `reports/wiry_pulse_analysis.md` | This report |
+
+**Using the prediction script:**
+```bash
+# Single patient
+python3 predict_wiry.py --age 65 --gender 0 --h3LBD 0.5 --h2LBL 38 \
+  --RET_L 0.14 --choppy_pulse 1 --red_dots 20 --BH 155 --h3h2_ratio_mean 0.03
+
+# Batch from CSV
+python3 predict_wiry.py --batch new_patients.csv
+```
+
+---
+
+## 6. Limitations
+
+1. **Sample size (N=274)** is modest. The 95% CI on AUC spans ~14 points.
+2. **Ground truth** is clinician diagnosis, not a gold-standard biomarker. Some "errors" may reflect sensor sensitivity exceeding clinical assessment.
+3. **Sensor-specific.** The h2/h3 measurements are device-dependent and may not transfer to other tonometry systems.
+4. **Gender imbalance.** The dataset is 72% female. The gender effect should be validated in a more balanced sample.
+5. **No external validation.** All metrics are from internal cross-validation and a single train/test split.
+
+---
+
+*Report generated by Cawcaw (OpenClaw data analyst). Model, prediction script, and this report can be found in the workspace under `data/`, `predict_wiry.py`, and `reports/` respectively.*

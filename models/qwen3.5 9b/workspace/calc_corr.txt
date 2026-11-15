@@ -1,0 +1,12 @@
+
+
+import pandas as pd  
+df = pd.read_csv('/home/vboxuser/.openclaw/workspace/data/housing_preprocessed.csv')
+
+# Get correlations between price and each feature
+correlations = {} 
+for col in df.columns:
+    if col != 'price':
+        corr = round(df[col].corr(df['price']), 4)  
+        
+print("Correlation with house_price (sorted by strength):")    

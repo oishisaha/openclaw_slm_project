@@ -1,0 +1,27 @@
+{
+  "test_id": "H05",
+  "title": "H05 \u2014 Pearson Correlation (Easy)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Calculate the Pearson correlation coefficient between house price and area. Ignore rows with missing values in either column. Report your answer in this exact format: @correlation_price_area[value] where value is a number between -1 and 1 rounded to two decimal places.",
+  "session_id": "56255cf6-af27-4dec-92b0-a9ed773d1cd3",
+  "model": "ollama/qwen3.5:9b",
+  "ground_truth": "@correlation_price_area[0.54]",
+  "model_output": "@correlation_price_area[0.54]",
+  "time_taken_seconds": 21.847,
+  "time_taken_human": "21.8 sec",
+  "token_usage": {
+    "input": 141288,
+    "output": 413,
+    "total": 141701
+  },
+  "tool_calls": {
+    "total": 3,
+    "breakdown": {
+      "read": 2,
+      "exec": 1
+    }
+  },
+  "verdict": "PASS",
+  "notes": [
+    "Manual Pearson formula implementation; correct only because dataset happens to have no missing price/area values (missing-value guard uses math.isnan on an already-cast float, which would never trigger on truly missing data)."
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "test_id": "H06",
+  "title": "H06 \u2014 Outlier Count IQR (Medium)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Identify outliers in house prices using the IQR method. Apply the 1.5\u00d7IQR rule: consider any price below Q1 - 1.5\u00d7IQR or above Q3 + 1.5\u00d7IQR as an outlier. Report the total number of outliers. Report your answer in this exact format: @total_outliers[value] where value is an integer.",
+  "session_id": "44129cfc-1b92-47a8-b36a-f39f6bfd0517",
+  "model": "ollama/qwen3.5:9b",
+  "ground_truth": "@total_outliers[15]",
+  "model_output": "@total_outliers[15]",
+  "time_taken_seconds": 33.349,
+  "time_taken_human": "33.3 sec",
+  "token_usage": {
+    "input": 148477,
+    "output": 850,
+    "total": 149327
+  },
+  "tool_calls": {
+    "total": 3,
+    "breakdown": {
+      "read": 2,
+      "exec": 1
+    }
+  },
+  "verdict": "PASS",
+  "notes": [
+    "Uses numpy.percentile for Q1/Q3, exactly matching the requested methodology \u2014 most textbook-correct implementation in the set."
+  ]
+}

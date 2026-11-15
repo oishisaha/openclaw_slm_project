@@ -1,0 +1,26 @@
+{
+  "test_id": "Test4",
+  "title": "Test4 \u2014 Top Drivers of Expensive Houses (Attempt 3, canonical)",
+  "prompt": "A real estate company wants to know what property characteristics increase house prices. Analyze the dataset and provide the top drivers of expensive houses.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Ranked drivers: Area (r=0.54), Bathrooms (r=0.52), Air Conditioning (r=0.45), Stories (r=0.42), Parking (r=0.38), Preferred Area (r=0.33), Main Road (r=0.30), Guest Rooms (r=0.26), Furnishing Status (0.23 vs -0.28), with strategic recommendations.",
+  "time_taken_seconds": 72.066,
+  "time_taken_human": "1.2 min",
+  "token_usage": {
+    "input": 370315,
+    "output": 1658,
+    "total": 371973,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 8,
+    "breakdown": {
+      "exec": 7,
+      "read": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": [
+    "Third attempt at this prompt. Attempt 1 (tui-3a24b1fd) errored at 55k/262k tokens with no session file persisted. Attempt 2 (16b68a55) is logged separately as Test4_attempt2_retryloop \u2014 a Type E retry-loop spiral. This is the only successful completion of the three."
+  ]
+}

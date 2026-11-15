@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bar Chart</title>
+<style>
+  body { font-family: sans-serif; }
+  .chart-container {
+    display: flex;
+    align-items: flex-end;
+    height: 250px;
+    width: 350px;
+    border-left: 2px solid #333;
+    border-bottom: 2px solid #333;
+    padding-left: 15px;
+    padding-bottom: 15px;
+    margin: 20px;
+    box-sizing: border-box;
+  }
+  .bar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+    position: relative;
+  }
+  .bar {
+    width: 40px;
+    background-color: steelblue;
+    transition: height 0.5s ease-out;
+  }
+  .bar-label {
+    margin-top: 5px;
+    font-size: 14px;
+  }
+  .bar-value {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<div class="chart-container">
+  <div class="bar-wrapper">
+    <div class="bar" style="height: 66.67px;"></div>
+    <div class="bar-label">A</div>
+    <div class="bar-value">10</div>
+  </div>
+  <div class="bar-wrapper">
+    <div class="bar" style="height: 166.67px;"></div>
+    <div class="bar-label">B</div>
+    <div class="bar-value">25</div>
+  </div>
+  <div class="bar-wrapper">
+    <div class="bar" style="height: 100px;"></div>
+    <div class="bar-label">C</div>
+    <div class="bar-value">15</div>
+  </div>
+  <div class="bar-wrapper">
+    <div class="bar" style="height: 200px;"></div>
+    <div class="bar-label">D</div>
+    <div class="bar-value">30</div>
+  </div>
+  <div class="bar-wrapper">
+    <div class="bar" style="height: 133.33px;"></div>
+    <div class="bar-label">E</div>
+    <div class="bar-value">20</div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "test_id": "HT8",
+  "title": "H-T8 \u2014 size_sqft Correlation (proxy: area exists)",
+  "prompt": "The file data/housing_dataset_chatgpt.csv contains housing price data. Analyse the size_sqft column and its correlation with price.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Silently substitutes area for the requested size_sqft column without asking. Reports weak correlation (r=0.0827), correctly notes this is heavily distorted by extreme outliers (one price of 99,999,999 and one area of 999,999).",
+  "time_taken_seconds": 38.126,
+  "time_taken_human": "38.1 sec",
+  "token_usage": {
+    "input": 120523,
+    "output": 725,
+    "total": 121248,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 2,
+    "breakdown": {
+      "read": 1,
+      "exec": 1
+    }
+  },
+  "verdict": "FAIL",
+  "notes": [
+    "Used exec (1 call) alongside read \u2014 correlation figure likely genuinely computed. Notably, this session correctly identifies the same extreme-outlier rows that HT4's uncomputed table also referenced, suggesting those outlier values are real (deliberately injected) rows in the dirty dataset, not fabricated by the model in this instance."
+  ]
+}

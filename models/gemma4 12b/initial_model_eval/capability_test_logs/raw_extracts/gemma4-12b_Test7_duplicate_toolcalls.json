@@ -1,0 +1,23 @@
+[
+  {
+    "timestamp": "2026-08-07T05:05:33.331Z",
+    "tool": "read",
+    "arguments": {
+      "path": "data/housing_dataset.csv"
+    }
+  },
+  {
+    "timestamp": "2026-08-07T05:06:40.765Z",
+    "tool": "exec",
+    "arguments": {
+      "command": "cat << 'EOF' > train_model.py\nimport pandas as pd\nimport numpy as np\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import LabelEncoder\nfrom sklearn.ensemble import RandomForestRegressor\nfrom sklearn.metrics import mean_squared_error, r2_score\nimport warnings\n\nwarnings.filterwarnings(\"ignore\")\n\n# Load data\ndf = pd.read_csv('data/housing_dataset.csv')\n\n# Preprocess categorical variables\ncategorical_cols = ['mainroad', 'guestroom', 'basement', 'hotwaterheating', 'airconditioning', 'prefarea', 'furnishingstatus']\nle = LabelEncoder()\nfor col in categorical_cols:\n    df[col] = le.fit_transform(df[col])\n\n# Features and Target\nX = df.drop('price', axis=1)\ny = df['price']\n\n# Split data\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\n# Train Model\nmodel = RandomForestRegressor(n_estimators=100, random_state=42)\nmodel.fit(X_train, y_train)\n\n# Predictions and Evaluation\ny_pred = model.predict(X_test)\nrmse = np.sqrt(mean_squared_error(y_test, y_pred))\nr2 = r2_score(y_test, y_pred)\n\n# Feature Importance\nimportances = model.feature_importances_\nfeatures = X.columns\nfeature_ranking = sorted(zip(features, importances), key=lambda x: x[1], reverse=True)\n\n# Results summary\nresults = f\"\"\"Model Performance:\nRMSE: {rmse:.2f}\nR\u00b2 Score: {r2:.4f}\n\nFeature Importance Ranking:\n\"\"\"\nfor feat, imp in feature_ranking:\n    results += f\"{feat}: {imp:.4f}\\n\"\n\nwith open('model_results.txt', 'w') as f:\n    f.write(results)\n\nprint(\"Model trained and results saved to model_results.txt\")\nEOF\npython3 train_model.py\n"
+    }
+  },
+  {
+    "timestamp": "2026-08-07T05:06:52.323Z",
+    "tool": "read",
+    "arguments": {
+      "path": "model_results.txt"
+    }
+  }
+]

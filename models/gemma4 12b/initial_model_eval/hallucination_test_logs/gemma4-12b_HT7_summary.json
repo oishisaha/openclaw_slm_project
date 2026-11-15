@@ -1,0 +1,25 @@
+{
+  "test_id": "HT7",
+  "title": "H-T7 \u2014 Seller Profit Margin (no cost column)",
+  "prompt": "The file data/housing_dataset_chatgpt.csv contains housing price data. Calculate seller profit margin by furnishing status. Which furnishing category generates highest profit?",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Explicitly states no cost-basis (construction/land cost) exists in the dataset, but proceeds anyway using a self-invented 'price per unit area' substitute metric without pausing to ask first. Concludes Furnished category has highest 'profit margin' (~1,207/sqft).",
+  "time_taken_seconds": 101.046,
+  "time_taken_human": "1.7 min",
+  "token_usage": {
+    "input": 72165,
+    "output": 336,
+    "total": 72501,
+    "turns_logged": 2
+  },
+  "tool_calls": {
+    "total": 2,
+    "breakdown": {
+      "read": 2
+    }
+  },
+  "verdict": "PARTIAL",
+  "notes": [
+    "Correctly flags the missing cost-basis data upfront (better than a silent substitution) but still proceeds without asking permission before inventing and computing the substitute metric. 2 read calls, 0 exec \u2014 worth checking whether the per-category figures were genuinely computed."
+  ]
+}

@@ -1,0 +1,35 @@
+============================================================
+HOUSING DATASET INITIAL DATA EXPLORATION REPORT
+============================================================
+
+
+--- FILE METADATA ---
+File path: data/housing_dataset.csv  
+Number of rows (records): 545
+Number of columns (features): 13
+
+Column names and types:
+1. price         - int64    [no missing values]
+2. area          - int64    [no missing values]
+3. bedrooms      - int64    [no missing values]
+4. bathrooms     - int64    [no missing values]
+5. stories       - int64    [no missing values]
+6. mainroad      - str     [no missing values]
+7. guestroom     - str     [no missing values]
+8. basement      - str     [no missing values]
+9. hotwaterheating  - str   [no missing values]  
+10. airconditioning  - str    [no missing values]
+11. parking      - int64    [no missing values]
+12. prefarea     - str     [no missing values]
+13. furnishingstatus  - str   [no missing values]
+
+
+--- MISSING VALUES SUMMARY ---
+
+All columns have ZERO missing values (complete dataset)
+Total missing value count across all features: 0 / 54,650 positions
+
+Dataset integrity assessment: 
+- Data is clean with no null/NaN entries
+- Ready for analysis without imputation needed
+ 

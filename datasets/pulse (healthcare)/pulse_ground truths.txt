@@ -1,0 +1,15 @@
+take the ground truth to be the wiry_pulse column
+My overall performance is that XGBoost RandomForest LogistricRegression have abt a AUROC of 0.8 ish
+With a held out test, RandomForest performs the best with AUROC of 0.829 with accuracy of 0.745
+the features I used in the end are
+"age", "gender",
+            "h3LBL", "h3LBM", "h3LBD", "h3RBL", "h3RBM", "h3RBD",
+            "h2LBL", "h2LBM", "h2LBD",
+            "RET L", "RET_R",
+            "tSA_LBL", "tSA_LBM", "tSA_LBD",
+            "LSER",
+and then i engineered new features which are
+
+"h2_asym_BD", "h2_asym_BM", "sSA_asym_BD", "sSA_asym_BM", "RET_asym"
+so a total of 22 features reduced from initial 69 features through eda
+also my preprocessing step was to dropout rows with missing data because there are rows with like whole missing pulse data or smth

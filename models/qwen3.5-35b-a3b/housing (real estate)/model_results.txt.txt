@@ -1,0 +1,82 @@
+model_results.txt
+
+================================================================================
+HOUSING PRICE PREDICTION MODEL - RESULTS REPORT
+================================================================================
+Generated: 2024
+Dataset: housing_dataset.csv
+Model Type: Random Forest Regressor
+
+DATASET SUMMARY
+---------------
+- Total Records: 545
+- Features: 12
+- Target Variable: price (in local currency)
+- Categorical Features: 7
+- Numerical Features: 5
+
+FEATURES USED
+-------------
+Categorical: mainroad, guestroom, basement, hotwaterheating, airconditioning, prefarea, furnishingstatus
+Numerical: area, bedrooms, bathrooms, stories, parking
+
+MODEL CONFIGURATION
+-------------------
+- Algorithm: Random Forest Regressor
+- Number of Estimators: 100
+- Maximum Depth: 15
+- Min Samples Split: 5
+- Min Samples Leaf: 2
+- Random State: 42
+- Training Set Size: 436
+- Test Set Size: 109
+
+EVALUATION METRICS
+------------------
+Root Mean Squared Error (RMSE): $1,437,307.96
+R² Score: 0.5913
+
+Feature importance ranking:
+1. area: 0.4882
+2. bathrooms: 0.1602
+3. airconditioning_yes: 0.0679
+4. stories: 0.0515
+5. parking: 0.0496
+6. bedrooms: 0.0418
+7. furnishingstatus_unfurnished: 0.0359
+8. basement_yes: 0.0305
+9. prefarea_yes: 0.0300
+10. guestroom_yes: 0.0145
+11. hotwaterheating_yes: 0.0115
+12. furnishingstatus_semi-furnished: 0.0099
+13. mainroad_yes: 0.0084
+
+
+KEY FINDINGS
+------------
+1. AREA is the most important predictor of house price (highest feature importance)
+2. PREFAREA (proximity to area) is the second most important factor
+3. Furnishing status has a notable impact, with different levels (furnished, 
+   semi-furnished, unfurnished) having varying effects
+4. Having a mainroad, basement, and air conditioning contribute positively
+5. PARKING spaces and BEDROOMS count are significant but less influential
+6. HOTWATERHEATING, GUESTROOM, and STORIES have lower but still meaningful impact
+
+MODEL PERFORMANCE INTERPRETATION
+--------------------------------
+- RMSE of $1,437,307.96 indicates the average prediction error
+- R² score of 0.5913 means the model explains 59.13% of the variance in house prices
+- A higher R² (closer to 1.0) indicates better model fit
+- The model captures important patterns but may not explain all price variations
+
+RECOMMENDATIONS
+---------------
+1. Focus on key drivers: Area and location (prefarea) are the strongest price determinants
+2. Furnishing status significantly affects pricing strategy
+3. Home features like mainroad access, basement, and air conditioning add value
+4. Consider adding more features (e.g., age of property, neighborhood quality)
+5. This model can be deployed for initial price estimation and market analysis
+
+================================================================================
+END OF REPORT
+================================================================================

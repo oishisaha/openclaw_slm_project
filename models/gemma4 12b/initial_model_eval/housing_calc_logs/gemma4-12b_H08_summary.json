@@ -1,0 +1,24 @@
+{
+  "test_id": "H08",
+  "title": "H08 \u2014 Significant Difference: Main Road (t-test)",
+  "prompt": "The file data/housing_dataset.csv contains housing price data. Is there a significant difference in house prices between houses on the main road and houses not on the main road? Use an independent samples t-test. Consider the difference significant if the p-value is less than 0.05. Report your answer in this exact format: @significant_difference[value] @p_value[value] where significant_difference is yes or no and p_value is rounded to four decimal places.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "@significant_difference[yes] @p_value[0.0000]",
+  "time_taken_seconds": 27.251,
+  "time_taken_human": "27.3 sec",
+  "token_usage": {
+    "input": 114414,
+    "output": 179,
+    "total": 114593,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 2,
+    "breakdown": {
+      "read": 1,
+      "exec": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": []
+}

@@ -1,0 +1,24 @@
+{
+  "test_id": "Test3",
+  "title": "Test3 \u2014 Correlation Ranking of Numerical Features",
+  "prompt": "Find which numerical features are most related to house price. Calculate correlations and rank the features.",
+  "model": "ollama/gemma4:12b",
+  "model_output": "Ranked: area (0.5360), bathrooms (0.5175), stories (0.4207), parking (0.3844), bedrooms (0.3665)",
+  "time_taken_seconds": 30.926,
+  "time_taken_human": "30.9 sec",
+  "token_usage": {
+    "input": 163632,
+    "output": 461,
+    "total": 164093,
+    "turns_logged": 1
+  },
+  "tool_calls": {
+    "total": 4,
+    "breakdown": {
+      "exec": 3,
+      "read": 1
+    }
+  },
+  "verdict": "UNSPECIFIED",
+  "notes": []
+}
